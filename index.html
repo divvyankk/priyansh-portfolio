@@ -154,12 +154,22 @@
   .tl-title{font-family:'Anton',sans-serif; font-size:21px; text-transform:uppercase; letter-spacing:.5px; margin-bottom:7px;}
   .tl-desc{font-size:14.5px; color:var(--muted); line-height:1.65; max-width:540px;}
 
-  /* WATCH — embedded reels */
+  /* WATCH — custom reel cards (link out to Instagram) */
   .watch-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:22px; margin-top:10px;}
-  .watch-card{background:var(--bg2); border:1px solid var(--line); border-radius:6px; padding:10px; box-shadow:5px 5px 0 rgba(0,0,0,0.4); display:flex; align-items:center; justify-content:center; min-height:420px;}
-  .watch-card iframe, .watch-card blockquote{max-width:100%;}
+  .reel-card{background:var(--bg2); border:1px solid var(--line); border-radius:6px; overflow:hidden; box-shadow:6px 6px 0 rgba(0,0,0,0.45); display:flex; flex-direction:column; text-decoration:none; transition:transform .15s, box-shadow .15s;}
+  .reel-card:hover{transform:translate(-3px,-3px); box-shadow:9px 9px 0 rgba(0,0,0,0.45);}
+  .reel-thumb{position:relative; aspect-ratio:9/13; background:radial-gradient(circle at 50% 30%,rgba(156,43,33,0.25),transparent 60%), linear-gradient(160deg,#1a1512,#0a0806); display:flex; align-items:center; justify-content:center; border-bottom:1px solid var(--line);}
+  .reel-play{width:58px; height:58px; border-radius:50%; background:rgba(0,0,0,0.55); border:2px solid var(--fire2); display:flex; align-items:center; justify-content:center; box-shadow:0 0 24px rgba(156,43,33,0.35);}
+  .reel-play::after{content:''; border-style:solid; border-width:9px 0 9px 15px; border-color:transparent transparent transparent var(--fire2); margin-left:4px;}
+  .reel-tag{position:absolute; top:12px; left:12px; font-size:10px; letter-spacing:1.5px; text-transform:uppercase; color:var(--fire2); border:1px solid rgba(156,43,33,0.4); padding:4px 9px; border-radius:2px; background:rgba(0,0,0,0.4);}
+  .reel-body{padding:16px 18px 18px;}
+  .reel-caption{font-size:13.5px; color:var(--text); line-height:1.55;}
+  .reel-meta{margin-top:12px; display:flex; justify-content:space-between; align-items:center; font-size:11.5px; color:var(--muted); letter-spacing:.5px;}
+  .reel-likes{color:var(--fire2); font-weight:700; font-family:'Anton',sans-serif; letter-spacing:.5px;}
+  .reel-cta{margin-top:6px; font-size:10.5px; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted);}
+  .reel-card:hover .reel-cta{color:var(--fire2);}
   @media(max-width:900px){
-    .watch-grid{grid-template-columns:1fr; max-width:420px; margin-left:auto; margin-right:auto;}
+    .watch-grid{grid-template-columns:1fr; max-width:360px; margin-left:auto; margin-right:auto;}
   }
 
   /* QUOTES */
@@ -336,15 +346,39 @@
     <div class="eyebrow">Watch</div>
     <h2 class="sec-title anton">On The Floor</h2>
     <div class="watch-grid">
-      <div class="watch-card">
-        <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DaGFWpeyp89/" data-instgrm-version="14"></blockquote>
-      </div>
-      <div class="watch-card">
-        <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DZ5EE_4SugM/" data-instgrm-version="14"></blockquote>
-      </div>
-      <div class="watch-card">
-        <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DZzfkYrSbLo/" data-instgrm-version="14"></blockquote>
-      </div>
+      <a class="reel-card" href="https://www.instagram.com/reel/DaGFWpeyp89/" target="_blank" rel="noopener">
+        <div class="reel-thumb">
+          <span class="reel-tag">Viral Clip</span>
+          <div class="reel-play"></div>
+        </div>
+        <div class="reel-body">
+          <div class="reel-caption">Battle floor, crowd going off — hip-hop freestyle round.</div>
+          <div class="reel-meta"><span class="reel-likes">26.3K+</span><span>likes</span></div>
+          <div class="reel-cta">Watch on Instagram ↗</div>
+        </div>
+      </a>
+      <a class="reel-card" href="https://www.instagram.com/reel/DZ5EE_4SugM/" target="_blank" rel="noopener">
+        <div class="reel-thumb">
+          <span class="reel-tag">#LDDLM Battle</span>
+          <div class="reel-play"></div>
+        </div>
+        <div class="reel-body">
+          <div class="reel-caption">TellaX battle round — freestyle to "Squideliciouz Bounce."</div>
+          <div class="reel-meta"><span class="reel-likes">1.5K+</span><span>likes</span></div>
+          <div class="reel-cta">Watch on Instagram ↗</div>
+        </div>
+      </a>
+      <a class="reel-card" href="https://www.instagram.com/reel/DZzfkYrSbLo/" target="_blank" rel="noopener">
+        <div class="reel-thumb">
+          <span class="reel-tag">Collab</span>
+          <div class="reel-play"></div>
+        </div>
+        <div class="reel-body">
+          <div class="reel-caption">Duo round with @aryan__giri — freestyle to "Doot Doot."</div>
+          <div class="reel-meta"><span class="reel-likes">405+</span><span>likes</span></div>
+          <div class="reel-cta">Watch on Instagram ↗</div>
+        </div>
+      </a>
     </div>
   </section>
 
@@ -404,6 +438,5 @@
     });
   }
 </script>
-<script async src="//www.instagram.com/embed.js"></script>
 </body>
 </html>
