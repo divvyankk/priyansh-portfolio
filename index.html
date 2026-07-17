@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Priyansh Shrivastava — Hip-Hop Dancer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0806;
+    --bg2:#120f0d;
+    --line:#2a2422;
+    --fire:#8a1c1c;
+    --fire2:#d64545;
+    --text:#ece6dd;
+    --muted:#8a8078;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; overflow-x:hidden;
+    background-image:
+      radial-gradient(circle at 10% 10%, rgba(138,28,28,0.10), transparent 40%),
+      radial-gradient(circle at 90% 90%, rgba(138,28,28,0.07), transparent 40%);
+    position:relative;
+  }
+  body::after{
+    content:''; position:fixed; inset:0; z-index:999; pointer-events:none; opacity:0.16; mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  body::before{
+    content:''; position:fixed; inset:0; z-index:998; pointer-events:none; opacity:0.35;
+    background:radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.55) 100%);
+  }
+  ::selection{background:var(--fire); color:#0a0806;}
+  .wrap{max-width:960px; margin:0 auto; padding:0 32px;}
+  .anton{font-family:'Anton',sans-serif; text-transform:uppercase;}
+
+  /* NAV */
+  nav{position:fixed; top:0; left:0; right:0; z-index:50; display:flex; justify-content:space-between; align-items:center; padding:22px 32px; backdrop-filter:blur(10px); background:rgba(5,5,5,0.55); border-bottom:1px solid var(--line);}
+  .logo{font-family:'Anton',sans-serif; letter-spacing:1px; font-size:16px;}
+  .logo span{color:var(--fire);}
+  nav .links{display:flex; gap:26px; align-items:center;}
+  nav a{color:var(--muted); text-decoration:none; font-size:12px; letter-spacing:1.5px; text-transform:uppercase;}
+  nav a:hover{color:var(--fire);}
+  nav .ig{color:var(--text); border:1px solid var(--line); padding:8px 16px; border-radius:999px;}
+  nav .ig:hover{border-color:var(--fire); color:var(--fire2);}
+
+  /* MARQUEE */
+  .marquee{border-top:1px solid var(--line); border-bottom:1px solid var(--line); overflow:hidden; white-space:nowrap; padding:14px 0; margin-top:70px; background:var(--bg2);}
+  .marquee-track{display:inline-block; padding-left:100%; animation:scroll 18s linear infinite;}
+  .marquee span{font-family:'Anton',sans-serif; font-size:14px; letter-spacing:3px; color:var(--muted); margin-right:40px; text-transform:uppercase;}
+  .marquee span.fire{color:var(--fire);}
+  @keyframes scroll{from{transform:translateX(0);} to{transform:translateX(-100%);}}
+
+  /* HERO */
+  .hero{min-height:92vh; display:flex; flex-direction:column; justify-content:center; padding:70px 0 60px; position:relative; overflow:hidden;}
+  .hero-glow{position:absolute; top:10%; right:-10%; width:520px; height:520px; background:radial-gradient(circle,rgba(138,28,28,0.14),transparent 65%); filter:blur(24px); pointer-events:none; z-index:0;}
+  .hero-content{position:relative; z-index:2;}
+  .tag{display:inline-flex; align-items:center; gap:8px; font-size:11px; letter-spacing:3px; text-transform:uppercase; color:var(--fire); border:1px solid rgba(138,28,28,0.4); padding:7px 16px; border-radius:999px; margin-bottom:30px; width:fit-content; opacity:0; animation:fadeUp .7s ease forwards;}
+  .dot{width:6px; height:6px; background:var(--fire); border-radius:50%; box-shadow:0 0 8px var(--fire);}
+  h1.hero-name{font-size:clamp(56px,10vw,118px); line-height:0.88; letter-spacing:0px; opacity:0; animation:fadeUp .8s ease forwards .1s;}
+  h1.hero-name .accent{color:var(--fire);}
+  .role-line{margin-top:24px; font-size:18px; color:var(--muted); max-width:560px; line-height:1.6; opacity:0; animation:fadeUp .8s ease forwards .25s;}
+  .role-line strong{color:var(--text); font-weight:600;}
+  .cta-row{margin-top:38px; display:flex; gap:14px; flex-wrap:wrap; align-items:center; opacity:0; animation:fadeUp .8s ease forwards .4s;}
+  .btn{display:inline-flex; align-items:center; gap:8px; padding:15px 28px; border-radius:2px; font-size:12px; letter-spacing:1.5px; text-transform:uppercase; text-decoration:none; font-weight:700;}
+  .btn-primary{background:var(--fire); color:var(--text); border:1px solid #d8cfc2; box-shadow:4px 4px 0 rgba(0,0,0,0.5); transition:transform .15s, box-shadow .15s;}
+  .btn-primary:hover{transform:translate(-2px,-2px); box-shadow:6px 6px 0 rgba(0,0,0,0.5);}
+  .btn-outline{border:1px solid var(--line); color:var(--text); transition:.2s; border-radius:2px;}
+  .btn-outline:hover{border-color:var(--fire); color:var(--fire2); transform:translate(-2px,-2px);}
+  @keyframes fadeUp{from{opacity:0; transform:translateY(16px);} to{opacity:1; transform:translateY(0);}}
+
+  /* LDDLM CREW PATCH — matches their real black tee wordmark */
+  .patch-lddlm{display:inline-flex; align-items:center; background:#000; border:1px solid #2b2b2b; padding:3px 9px; border-radius:4px; font-family:'Inter',sans-serif; font-weight:800; font-size:0.82em; letter-spacing:0.5px; color:#fff; text-decoration:none; vertical-align:1px; transition:.2s;}
+  .patch-lddlm:hover{border-color:var(--fire); box-shadow:0 0 0 1px rgba(138,28,28,0.25);}
+  .crew-credit{margin-top:22px; display:flex; align-items:center; gap:10px; font-size:12px; color:var(--muted); opacity:0; animation:fadeUp .8s ease forwards .5s;}
+  .crew-credit span{letter-spacing:.5px;}
+
+  /* FLOATING 3D DECOR */
+  .floaters{position:absolute; inset:0; z-index:1; pointer-events:none;}
+  .floater{position:absolute; display:flex; align-items:center; justify-content:center; border-radius:50%; background:#141110; border:1px solid rgba(138,28,28,0.3); box-shadow:5px 5px 0 rgba(0,0,0,0.4); animation:floatY 7s ease-in-out infinite; transition:transform .15s ease-out; filter:saturate(.75);}
+  .floater span{filter:drop-shadow(0 2px 4px rgba(0,0,0,0.5)) saturate(.7) sepia(.15);}
+  .f1{width:78px; height:78px; font-size:32px; top:4%; right:6%; animation-duration:7s;}
+  .f2{width:56px; height:56px; font-size:24px; top:68%; right:2%; animation-duration:5.5s; animation-delay:.6s;}
+  .f3{width:60px; height:60px; font-size:26px; top:6%; right:44%; animation-duration:6.5s; animation-delay:.3s;}
+  .f4{width:46px; height:46px; font-size:20px; bottom:8%; right:34%; animation-duration:5s; animation-delay:1s;}
+  .f5{width:38px; height:38px; font-size:16px; top:46%; right:0%; animation-duration:4.5s; animation-delay:.4s;}
+  @keyframes floatY{
+    0%,100%{ transform: translate(var(--px,0px),var(--py,0px)) translateY(0) rotate(-6deg);}
+    50%{ transform: translate(var(--px,0px),var(--py,0px)) translateY(-20px) rotate(6deg);}
+  }
+  @media(max-width:760px){ .floater{display:none;} }
+
+  /* HERO SPLIT: TEXT + AI PORTRAIT */
+  .hero-inner{display:grid; grid-template-columns:1.05fr .95fr; gap:44px; align-items:center; position:relative; z-index:2;}
+  .avatar-stage{position:relative; display:flex; align-items:center; justify-content:center; min-height:420px; opacity:0; animation:fadeUp .9s ease forwards .15s;}
+  .avatar-glow{position:absolute; width:380px; height:380px; background:radial-gradient(circle,rgba(138,28,28,0.18),transparent 70%); filter:blur(30px); z-index:0;}
+  .avatar-frame{position:relative; z-index:1; width:300px; height:380px; border-radius:6px; background:linear-gradient(160deg,#161310,#0a0806); border:1px solid #3a322c; box-shadow:8px 8px 0 rgba(0,0,0,0.5); display:flex; align-items:center; justify-content:center; overflow:hidden;}
+  .avatar-frame img{width:100%; height:100%; object-fit:cover; display:block; filter:grayscale(70%) contrast(1.05) brightness(0.88) sepia(0.25); mix-blend-mode:normal;}
+  .avatar-frame .tint{position:absolute; inset:0; background:linear-gradient(160deg,rgba(138,28,28,0.35),rgba(10,8,6,0.4) 55%,rgba(0,0,0,0.6)); mix-blend-mode:multiply; pointer-events:none;}
+  .avatar-frame .tint2{position:absolute; inset:0; background:linear-gradient(0deg,rgba(8,6,5,0.85),transparent 45%); pointer-events:none;}
+  .avatar-placeholder{text-align:center; padding:26px; border:1px dashed rgba(138,28,28,0.3); border-radius:18px; margin:16px;}
+  .avatar-placeholder .mono{font-family:'Anton',sans-serif; font-size:56px; color:var(--fire); line-height:1;}
+  .avatar-placeholder .hint{margin-top:14px; font-size:10.5px; letter-spacing:1.5px; text-transform:uppercase; color:#666; line-height:1.6;}
+  .avatar-tag{position:absolute; z-index:2; bottom:-16px; left:50%; transform:translateX(-50%); background:var(--fire); color:var(--text); font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:9px 18px; border-radius:2px; border:1px solid #3a322c; box-shadow:3px 3px 0 rgba(0,0,0,0.5); white-space:nowrap;}
+  @media(max-width:900px){
+    .hero-inner{grid-template-columns:1fr; text-align:center;}
+    .avatar-stage{order:-1; min-height:340px;}
+    .role-line{margin-left:auto; margin-right:auto;}
+    .cta-row{justify-content:center;}
+    .tag{margin-left:auto; margin-right:auto;}
+  }
+
+  /* STATS */
+  .stats{display:grid; grid-template-columns:repeat(3,1fr); border:1px solid var(--line); border-radius:10px; overflow:hidden; margin-top:56px;}
+  .stat{padding:26px 20px; text-align:center; border-right:1px solid var(--line);}
+  .stat:last-child{border-right:none;}
+  .stat .num{font-family:'Anton',sans-serif; font-size:clamp(24px,4vw,34px); color:var(--fire2);}
+  .stat .num span{font-size:14px; color:var(--muted); font-family:'Inter',sans-serif;}
+  .stat .cap{margin-top:6px; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--muted);}
+
+  /* SECTION SHARED */
+  section{padding:80px 0; border-top:1px solid var(--line);}
+  .eyebrow{font-size:11px; letter-spacing:4px; text-transform:uppercase; color:var(--fire); margin-bottom:14px;}
+  .sec-title{font-family:'Anton',sans-serif; font-size:clamp(28px,5vw,46px); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:20px;}
+  .about p{font-size:18px; line-height:1.75; color:#c9c9c9; max-width:640px;}
+
+  /* ACHIEVEMENTS - scoreboard style */
+  .ach-list{margin-top:10px; border:1px solid var(--line); border-radius:10px; overflow:hidden;}
+  .ach-row{display:flex; align-items:center; gap:22px; padding:22px 26px; border-bottom:1px solid var(--line); transition:background .2s;}
+  .ach-row:last-child{border-bottom:none;}
+  .ach-row:hover{background:var(--bg2);}
+  .ach-rank{font-family:'Anton',sans-serif; font-size:32px; color:var(--line); min-width:50px;}
+  .ach-row:hover .ach-rank{color:var(--fire);}
+  .ach-body{flex:1;}
+  .ach-title{font-family:'Anton',sans-serif; font-size:19px; letter-spacing:0.5px; text-transform:uppercase; color:var(--fire2);}
+  .ach-desc{margin-top:4px; font-size:13.5px; color:var(--muted); line-height:1.5;}
+
+  /* FOCUS CHIPS */
+  .strip{display:flex; gap:10px; flex-wrap:wrap; margin-top:8px;}
+  .chip{border:1px solid var(--line); color:var(--muted); font-size:12px; letter-spacing:1px; text-transform:uppercase; padding:10px 18px; border-radius:999px; transition:.2s;}
+  .chip:hover{border-color:var(--fire); color:var(--fire2);}
+
+  /* JOURNEY TIMELINE */
+  .timeline{position:relative; margin-top:32px; padding-left:30px;}
+  .timeline::before{content:''; position:absolute; left:5px; top:6px; bottom:6px; width:2px; background:var(--line);}
+  .tl-item{position:relative; padding-bottom:36px;}
+  .tl-item:last-child{padding-bottom:0;}
+  .tl-dot{position:absolute; left:-30px; top:3px; width:12px; height:12px; border-radius:50%; background:var(--fire); border:2px solid var(--bg); box-shadow:0 0 0 2px var(--line);}
+  .tl-item:last-child .tl-dot{background:var(--fire2);}
+  .tl-year{font-family:'Anton',sans-serif; font-size:12px; letter-spacing:2.5px; text-transform:uppercase; color:var(--fire2); margin-bottom:6px;}
+  .tl-title{font-family:'Anton',sans-serif; font-size:21px; text-transform:uppercase; letter-spacing:.5px; margin-bottom:7px;}
+  .tl-desc{font-size:14.5px; color:var(--muted); line-height:1.65; max-width:540px;}
+
+  /* QUOTES */
+  .quotes{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:10px; overflow:hidden; margin-top:10px;}
+  .quote{background:var(--bg2); padding:24px; font-size:14px; color:#d6d6d6; line-height:1.6;}
+  .quote .who{margin-top:12px; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted);}
+
+  /* CONNECT */
+  .connect{text-align:center; padding:100px 0 80px;}
+  .connect h2{font-family:'Anton',sans-serif; font-size:clamp(34px,7vw,64px); text-transform:uppercase; letter-spacing:0.5px;}
+  .connect h2 .accent{color:var(--fire);}
+  .connect p{color:var(--muted); margin-top:14px; font-size:15px;}
+  .connect .btn{margin-top:30px;}
+
+  footer{text-align:center; padding:34px 0 44px; color:#4a4a4a; font-size:11px; letter-spacing:2px; text-transform:uppercase; border-top:1px solid var(--line);}
+
+  @media(max-width:640px){
+    .stats{grid-template-columns:1fr; }
+    .stat{border-right:none; border-bottom:1px solid var(--line);}
+    .stat:last-child{border-bottom:none;}
+    nav .links{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">PRIYANSH<span>.</span></div>
+  <div class="links">
+    <a href="#about">About</a>
+    <a href="#journey">Journey</a>
+    <a href="#achievements">Achievements</a>
+    <a href="#connect">Connect</a>
+  </div>
+  <a class="ig" href="https://www.instagram.com/priyansh3604/" target="_blank" rel="noopener">Instagram ↗</a>
+</nav>
+
+<div class="marquee">
+  <div class="marquee-track">
+    <span class="fire">TOP DANCER</span><span>LDDLM CREW</span><span class="fire">HIP-HOP</span><span>FREESTYLE BATTLES</span><span class="fire">TOP DANCER</span><span>LDDLM CREW</span><span class="fire">HIP-HOP</span><span>FREESTYLE BATTLES</span>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="hero" id="heroStage">
+    <div class="hero-glow"></div>
+    <div class="floaters">
+      <div class="floater f1" data-depth="0.7"><span>🔥</span></div>
+      <div class="floater f2" data-depth="0.4"><span>💿</span></div>
+      <div class="floater f3" data-depth="0.9"><span>👑</span></div>
+      <div class="floater f4" data-depth="0.5"><span>🎤</span></div>
+      <div class="floater f5" data-depth="0.6"><span>✨</span></div>
+    </div>
+
+    <div class="hero-inner">
+      <div class="hero-content">
+        <span class="tag"><span class="dot"></span>Hip-Hop / Freestyle Battle Circuit · India</span>
+        <h1 class="hero-name anton">Priyansh<br>Shriva<span class="accent">stava</span></h1>
+        <p class="role-line"><strong>I'm a Hip-Hop Dancer</strong> — Battle Competitor repping <a class="patch-lddlm" href="https://www.instagram.com/lddlmofficiel/" target="_blank" rel="noopener">LDDLM</a>. Raw energy, sharp character work, and a growing list of titles across India's battle scene.</p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="#journey">Follow the Journey</a>
+          <a class="btn btn-outline" href="#achievements">See Achievements</a>
+        </div>
+        <div class="crew-credit"><a class="patch-lddlm" href="https://www.instagram.com/lddlmofficiel/" target="_blank" rel="noopener">LDDLM</a> <span>· 13.9k followers · "Welcome to LDDLM"</span></div>
+
+        <div class="stats">
+          <div class="stat">
+            <div class="num">15.1<span>k</span></div>
+            <div class="cap">Followers</div>
+          </div>
+          <div class="stat">
+            <div class="num">164</div>
+            <div class="cap">Performances Shared</div>
+          </div>
+          <div class="stat">
+            <div class="num">900<span>k+</span></div>
+            <div class="cap">Views on Top Reel</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="avatar-stage">
+        <div class="avatar-glow"></div>
+        <div class="avatar-frame">
+          <img src="priyansh-hero.jpg" alt="Priyansh Shrivastava">
+          <div class="tint"></div>
+          <div class="tint2"></div>
+        </div>
+        <div class="avatar-tag">Hip-Hop · Freestyle</div>
+      </div>
+    </div>
+  </div>
+
+  <section id="about" class="about">
+    <div class="eyebrow">About</div>
+    <h2 class="sec-title anton">The Story</h2>
+    <p>I'm a freestyle hip-hop dancer competing and performing within India's hip-hop battle circuit. Known for raw energy and character-driven freestyle, I battle, train, and perform under the <a class="patch-lddlm" href="https://www.instagram.com/lddlmofficiel/" target="_blank" rel="noopener">LDDLM</a> banner — a Paris underground crew with real international pedigree, the same lineage that produced Diablo and StalaMuerte of Los Diablos De La Muerte. I bring that same street style and stage presence to every floor I step on.</p>
+  </section>
+
+  <section id="journey">
+    <div class="eyebrow">The Journey</div>
+    <h2 class="sec-title anton">Four Years In</h2>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-year">Year One</div>
+        <div class="tl-title">Picked It Up</div>
+        <div class="tl-desc">I started dancing four years ago as a hip-hop freestyle dancer — no shortcuts, just practice, repetition, and showing up.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-year">Next</div>
+        <div class="tl-title">Local Jams</div>
+        <div class="tl-desc">I started getting into jams within India, testing what I had in front of real crowds and real cyphers.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-year">Then</div>
+        <div class="tl-title">First Wins, Wider Travel</div>
+        <div class="tl-desc">Travel started opening up for me — and so did the wins. I took battles judged by international names in the scene.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-year">The Leap</div>
+        <div class="tl-title">Shirofes, Japan</div>
+        <div class="tl-desc">I represented India on an international stage at Shirofes — one of Japan's biggest names in the battle scene.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-year">The Crew</div>
+        <div class="tl-title">Joined LDDLM</div>
+        <div class="tl-desc">That run is what brought me into <a class="patch-lddlm" href="https://www.instagram.com/lddlmofficiel/" target="_blank" rel="noopener">LDDLM</a> — the crew I rep to this day.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-year">Right Now</div>
+        <div class="tl-title">Still Building</div>
+        <div class="tl-desc">Four years in, and the run's still going — more floors, more battles, more reasons to watch.</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="achievements">
+    <div class="eyebrow">Selected Achievements</div>
+    <h2 class="sec-title anton">On The Board</h2>
+    <div class="ach-list">
+      <div class="ach-row">
+        <div class="ach-rank anton">01</div>
+        <div class="ach-body">
+          <div class="ach-title">Runner-Up — Jack & Rock Program</div>
+          <div class="ach-desc">Judged by @alexthecage · Representing @inthemusic__</div>
+        </div>
+      </div>
+      <div class="ach-row">
+        <div class="ach-rank anton">02</div>
+        <div class="ach-body">
+          <div class="ach-title">Champion — 1-on-1 Hip-Hop Battle</div>
+          <div class="ach-desc">Battle event win, LDDLM crew</div>
+        </div>
+      </div>
+      <div class="ach-row">
+        <div class="ach-rank anton">03</div>
+        <div class="ach-body">
+          <div class="ach-title">Finalist — Hip-Hop Battle Circuit</div>
+          <div class="ach-desc">Top-bracket finish, battle event</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">Focus</div>
+    <h2 class="sec-title anton">What I Bring</h2>
+    <div class="strip">
+      <span class="chip">Freestyle</span>
+      <span class="chip">1-on-1 Battles</span>
+      <span class="chip">Hip-Hop</span>
+      <span class="chip">Street Style</span>
+      <span class="chip">Character Work</span>
+      <span class="chip">Crew: <a class="patch-lddlm" href="https://www.instagram.com/lddlmofficiel/" target="_blank" rel="noopener">LDDLM</a></span>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">Crowd Reaction</div>
+    <h2 class="sec-title anton">Straight From The Floor</h2>
+    <div class="quotes">
+      <div class="quote">"The beast."<div class="who">— @stalamuerte_stylezc, Los Diablos De La Muerte</div></div>
+      <div class="quote">"Why isn't the crowd hyped? That was insane 🔥🔥🔥"<div class="who">— Battle audience comment</div></div>
+      <div class="quote">"Killed it 🔥"<div class="who">— Battle audience comment</div></div>
+    </div>
+  </section>
+
+  <div id="connect" class="connect">
+    <h2 class="anton">Let's <span class="accent">Connect</span></h2>
+    <p>For battles, bookings, or collabs — hit me up on Instagram.</p>
+    <a class="btn btn-primary" href="https://www.instagram.com/priyansh3604/" target="_blank" rel="noopener">@priyansh3604 ↗</a>
+  </div>
+
+  <footer>Priyansh Shrivastava — Portfolio</footer>
+</div>
+
+<script>
+  // Mouse-parallax for the floating hero decor
+  const heroStage = document.getElementById('heroStage');
+  const floaters = document.querySelectorAll('.floater');
+  if (heroStage && window.matchMedia('(min-width:761px)').matches) {
+    heroStage.addEventListener('mousemove', (e) => {
+      const rect = heroStage.getBoundingClientRect();
+      const cx = rect.width / 2, cy = rect.height / 2;
+      const dx = (e.clientX - rect.left - cx) / cx;
+      const dy = (e.clientY - rect.top - cy) / cy;
+      floaters.forEach((f) => {
+        const depth = parseFloat(f.dataset.depth) || 0.5;
+        f.style.setProperty('--px', (dx * 34 * depth) + 'px');
+        f.style.setProperty('--py', (dy * 34 * depth) + 'px');
+      });
+    });
+    heroStage.addEventListener('mouseleave', () => {
+      floaters.forEach((f) => {
+        f.style.setProperty('--px', '0px');
+        f.style.setProperty('--py', '0px');
+      });
+    });
+  }
+</script>
+</body>
+</html>
