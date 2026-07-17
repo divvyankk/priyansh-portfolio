@@ -154,6 +154,14 @@
   .tl-title{font-family:'Anton',sans-serif; font-size:21px; text-transform:uppercase; letter-spacing:.5px; margin-bottom:7px;}
   .tl-desc{font-size:14.5px; color:var(--muted); line-height:1.65; max-width:540px;}
 
+  /* WATCH — embedded reels */
+  .watch-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:22px; margin-top:10px;}
+  .watch-card{background:var(--bg2); border:1px solid var(--line); border-radius:6px; padding:10px; box-shadow:5px 5px 0 rgba(0,0,0,0.4); display:flex; align-items:center; justify-content:center; min-height:420px;}
+  .watch-card iframe, .watch-card blockquote{max-width:100%;}
+  @media(max-width:900px){
+    .watch-grid{grid-template-columns:1fr; max-width:420px; margin-left:auto; margin-right:auto;}
+  }
+
   /* QUOTES */
   .quotes{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:10px; overflow:hidden; margin-top:10px;}
   .quote{background:var(--bg2); padding:24px; font-size:14px; color:#d6d6d6; line-height:1.6;}
@@ -183,6 +191,7 @@
   <div class="links">
     <a href="#about">About</a>
     <a href="#journey">Journey</a>
+    <a href="#watch">Watch</a>
     <a href="#achievements">Achievements</a>
     <a href="#connect">Connect</a>
   </div>
@@ -323,6 +332,22 @@
     </div>
   </section>
 
+  <section id="watch">
+    <div class="eyebrow">Watch</div>
+    <h2 class="sec-title anton">On The Floor</h2>
+    <div class="watch-grid">
+      <div class="watch-card">
+        <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DaGFWpeyp89/" data-instgrm-version="14"></blockquote>
+      </div>
+      <div class="watch-card">
+        <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DZ5EE_4SugM/" data-instgrm-version="14"></blockquote>
+      </div>
+      <div class="watch-card">
+        <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DZzfkYrSbLo/" data-instgrm-version="14"></blockquote>
+      </div>
+    </div>
+  </section>
+
   <section>
     <div class="eyebrow">Focus</div>
     <h2 class="sec-title anton">What I Bring</h2>
@@ -379,5 +404,6 @@
     });
   }
 </script>
+<script async src="//www.instagram.com/embed.js"></script>
 </body>
 </html>
