@@ -156,6 +156,26 @@
   .tl-title{font-family:'Anton',sans-serif; font-size:21px; text-transform:uppercase; letter-spacing:.5px; margin-bottom:7px;}
   .tl-desc{font-size:14.5px; color:var(--muted); line-height:1.65; max-width:540px;}
 
+  /* WALL OF FAME — photo proof of the achievements board */
+  .wof-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:26px; margin-top:10px;}
+  .wof-card{position:relative; display:block; text-decoration:none; border-radius:4px; overflow:hidden; background:var(--bg2); border:1px solid var(--line); box-shadow:7px 7px 0 rgba(0,0,0,0.5); transition:transform .18s, box-shadow .18s;}
+  .wof-card:hover{transform:translate(-4px,-4px) rotate(-0.4deg); box-shadow:11px 11px 0 rgba(0,0,0,0.5);}
+  .wof-photo{aspect-ratio:3/4; overflow:hidden; position:relative;}
+  .wof-photo img{width:100%; height:100%; object-fit:cover; display:block; filter:grayscale(1) contrast(1.15) brightness(0.92); transition:filter .25s, transform .35s;}
+  .wof-card:hover .wof-photo img{filter:grayscale(0.35) contrast(1.1) sepia(0.15); transform:scale(1.04);}
+  .wof-photo::after{content:''; position:absolute; inset:0; background:linear-gradient(180deg,rgba(0,0,0,0) 45%,rgba(0,0,0,0.85) 100%); pointer-events:none;}
+  .wof-tag{position:absolute; top:12px; left:12px; z-index:2; font-family:'Anton',sans-serif; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--text); background:var(--fire); padding:5px 10px; box-shadow:3px 3px 0 rgba(0,0,0,0.5); transform:rotate(-2deg);}
+  .wof-info{position:absolute; left:0; right:0; bottom:0; z-index:2; padding:16px 16px 18px;}
+  .wof-title{font-family:'Anton',sans-serif; font-size:15px; letter-spacing:0.5px; text-transform:uppercase; color:var(--text); line-height:1.25;}
+  .wof-sub{margin-top:5px; font-size:11px; letter-spacing:1px; text-transform:uppercase; color:var(--muted);}
+  .wof-card:hover .wof-sub{color:var(--fire2);}
+  @media(max-width:900px){
+    .wof-grid{grid-template-columns:repeat(2,1fr);}
+  }
+  @media(max-width:520px){
+    .wof-grid{grid-template-columns:1fr; max-width:340px; margin-left:auto; margin-right:auto;}
+  }
+
   /* WATCH — custom reel cards (link out to Instagram) */
   .watch-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:22px; margin-top:10px;}
   .reel-card{background:var(--bg2); border:1px solid var(--line); border-radius:6px; overflow:hidden; box-shadow:6px 6px 0 rgba(0,0,0,0.45); display:flex; flex-direction:column; text-decoration:none; transition:transform .15s, box-shadow .15s;}
@@ -352,7 +372,7 @@
         <div class="ach-rank anton">05</div>
         <div class="ach-body">
           <div class="ach-title">Runner-Up — Circle Jam (1v1)</div>
-          <div class="ach-desc">Judged by <a class="ig-tag" href="https://www.instagram.com/gonzytv/" target="_blank" rel="noopener">@gonzytv</a></div>
+          <div class="ach-desc">Judged by <a class="ig-tag" href="https://www.instagram.com/gonzy2hot/" target="_blank" rel="noopener">@gonzy2hot</a></div>
         </div>
       </div>
       <div class="ach-row">
@@ -369,6 +389,53 @@
           <div class="ach-desc">Judged by <a class="ig-tag" href="https://www.instagram.com/junioryudat/" target="_blank" rel="noopener">@junioryudat</a></div>
         </div>
       </div>
+    </div>
+  </section>
+
+  <section id="wall-of-fame">
+    <div class="eyebrow">The Proof</div>
+    <h2 class="sec-title anton">Wall Of Fame</h2>
+    <div class="wof-grid">
+      <a class="wof-card" href="https://www.instagram.com/p/DKMqR1uhGbX/" target="_blank" rel="noopener">
+        <div class="wof-photo">
+          <img src="wof-redbull-westzone.jpg" alt="Priyansh at Red Bull Dance Your Style National Final India">
+        </div>
+        <div class="wof-tag">Winner</div>
+        <div class="wof-info">
+          <div class="wof-title">Red Bull Dance Your Style — West Zone</div>
+          <div class="wof-sub">Mumbai · India Final berth</div>
+        </div>
+      </a>
+      <a class="wof-card" href="https://www.instagram.com/p/C7uP--USx5s/" target="_blank" rel="noopener">
+        <div class="wof-photo">
+          <img src="wof-jackandrock.jpg" alt="Priyansh holding Runner Up poster at Jack and Rock Program">
+        </div>
+        <div class="wof-tag">Runner-Up</div>
+        <div class="wof-info">
+          <div class="wof-title">Jack &amp; Rock Program</div>
+          <div class="wof-sub">1v1 Hip-Hop · Delhi</div>
+        </div>
+      </a>
+      <a class="wof-card" href="https://www.instagram.com/p/Cet10dftlEv/" target="_blank" rel="noopener">
+        <div class="wof-photo">
+          <img src="wof-circlejam.jpg" alt="Priyansh holding Finalist poster at The Circle Jam India">
+        </div>
+        <div class="wof-tag">Finalist</div>
+        <div class="wof-info">
+          <div class="wof-title">The Circle Jam India</div>
+          <div class="wof-sub">1v1 Hip-Hop</div>
+        </div>
+      </a>
+      <a class="wof-card" href="https://www.instagram.com/p/DZzjXwFkeBZ/" target="_blank" rel="noopener">
+        <div class="wof-photo">
+          <img src="wof-90sjam.jpg" alt="Priyansh holding two Winner posters at Ninety's Jam">
+        </div>
+        <div class="wof-tag">Double Winner</div>
+        <div class="wof-info">
+          <div class="wof-title">Ninety's Jam</div>
+          <div class="wof-sub">1v1 &amp; 2v2 Hip-Hop</div>
+        </div>
+      </a>
     </div>
   </section>
 
