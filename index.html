@@ -37,13 +37,75 @@
   .wrap{max-width:960px; margin:0 auto; padding:0 32px;}
   .anton{font-family:'Anton',sans-serif; text-transform:uppercase;}
 
+  /* SCROLL PROGRESS BAR */
+  .scroll-progress{position:fixed; top:0; left:0; height:3px; background:linear-gradient(90deg,var(--fire),var(--fire2)); z-index:1000; width:0%; box-shadow:0 0 10px rgba(214,69,69,0.6); transition:width .1s linear;}
+
+  /* BOTTOM HUD / SCOREBOARD BAR */
+  .hud{position:fixed; left:0; right:0; bottom:0; z-index:900; display:flex; justify-content:space-between; align-items:center; padding:10px 24px; background:rgba(6,5,4,0.82); backdrop-filter:blur(8px); border-top:1px solid var(--line); font-size:10.5px; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); transform:translateY(100%); transition:transform .4s ease;}
+  .hud.show{transform:translateY(0);}
+  .hud-item{display:flex; align-items:center; gap:7px;}
+  .hud-item b{color:var(--fire2); font-weight:700;}
+  .hud-dot{width:5px; height:5px; border-radius:50%; background:var(--fire2); animation:hudBlink 1.6s ease-in-out infinite;}
+  @keyframes hudBlink{0%,100%{opacity:1;} 50%{opacity:.25;}}
+  .hud-center{display:none;}
+  @media(min-width:760px){ .hud-center{display:flex;} }
+  @media(max-width:520px){ .hud{font-size:9px; padding:9px 16px;} }
+
+  /* KINETIC OUTLINE DIVIDER */
+  .kinetic{overflow:hidden; white-space:nowrap; border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:6px 0;}
+  .kinetic-track{display:inline-block; font-family:'Anton',sans-serif; font-size:clamp(70px,13vw,160px); letter-spacing:2px; text-transform:uppercase; color:transparent; -webkit-text-stroke:1.5px var(--line); text-stroke:1.5px var(--line); will-change:transform;}
+  .kinetic-track span{-webkit-text-stroke:1.5px var(--fire); text-stroke:1.5px var(--fire); margin-right:.35em;}
+
+  /* CORNER REGISTRATION MARKS */
+  .corner-mark{position:fixed; width:6px; height:6px; background:var(--fire2); z-index:60; opacity:.75; pointer-events:none; animation:markPulse 3.2s ease-in-out infinite;}
+  .corner-mark.tl{top:20px; left:20px;}
+  .corner-mark.tr{top:20px; right:20px; animation-delay:.4s;}
+  .corner-mark.bl{bottom:20px; left:20px; animation-delay:.8s;}
+  .corner-mark.br{bottom:20px; right:20px; animation-delay:1.2s;}
+  @keyframes markPulse{0%,100%{opacity:.4; transform:scale(1);} 50%{opacity:1; transform:scale(1.6);}}
+  @media(max-width:640px){ .corner-mark{display:none;} }
+
+  /* PAGE LOADER */
+  .loader{position:fixed; inset:0; z-index:3000; background:var(--bg); display:flex; align-items:center; justify-content:center; flex-direction:column; gap:14px; transition:opacity .6s ease, visibility .6s ease;}
+  .loader.done{opacity:0; visibility:hidden; pointer-events:none;}
+  .loader-pct{font-family:'Anton',sans-serif; font-size:15px; letter-spacing:4px; color:var(--fire2);}
+  .loader-bar{width:180px; height:2px; background:var(--line); overflow:hidden;}
+  .loader-bar-fill{height:100%; width:0%; background:var(--fire2); box-shadow:0 0 8px rgba(214,69,69,0.7);}
+
+  /* CUSTOM CURSOR (desktop only) */
+  .cursor-dot{position:fixed; top:0; left:0; width:7px; height:7px; border-radius:50%; background:var(--fire2); pointer-events:none; z-index:1500; transform:translate(-50%,-50%); opacity:0; transition:opacity .3s;}
+  .cursor-ring{position:fixed; top:0; left:0; width:32px; height:32px; border-radius:50%; border:1px solid rgba(214,69,69,0.55); pointer-events:none; z-index:1500; transform:translate(-50%,-50%); opacity:0; transition:width .25s ease, height .25s ease, border-color .25s ease, opacity .3s;}
+  .cursor-ring.big{width:56px; height:56px; border-color:var(--text);}
+  .has-cursor, .has-cursor a, .has-cursor button{cursor:none;}
+  .has-cursor .cursor-dot, .has-cursor .cursor-ring{opacity:1;}
+
+  /* GLITCH FLICKER ACCENT ON HERO NAME */
+  @keyframes glitchFlicker{
+    0%,93%,100%{text-shadow:none;}
+    94%{text-shadow:2px 0 var(--fire2), -2px 0 rgba(120,190,255,0.45);}
+    95%{text-shadow:-2px 0 var(--fire2), 2px 0 rgba(120,190,255,0.45);}
+    96%{text-shadow:none;}
+  }
+
+  /* REVEAL-ON-SCROLL SYSTEM */
+  .reveal{opacity:0; transform:translateY(30px); transition:opacity .7s cubic-bezier(.2,.7,.3,1), transform .7s cubic-bezier(.2,.7,.3,1);}
+  .reveal.in{opacity:1; transform:translateY(0);}
+  .reveal-scale{opacity:0; transform:scale(.9) translateY(14px); transition:opacity .65s cubic-bezier(.2,.7,.3,1), transform .65s cubic-bezier(.2,.7,.3,1);}
+  .reveal-scale.in{opacity:1; transform:scale(1) translateY(0);}
+  .reveal-left{opacity:0; transform:translateX(-34px); transition:opacity .7s cubic-bezier(.2,.7,.3,1), transform .7s cubic-bezier(.2,.7,.3,1);}
+  .reveal-left.in{opacity:1; transform:translateX(0);}
+  .sec-title.reveal{transition-delay:.08s;}
+
   /* NAV */
   nav{position:fixed; top:0; left:0; right:0; z-index:50; display:flex; justify-content:space-between; align-items:center; padding:22px 32px; backdrop-filter:blur(10px); background:rgba(5,5,5,0.55); border-bottom:1px solid var(--line);}
   .logo{font-family:'Anton',sans-serif; letter-spacing:1px; font-size:16px;}
   .logo span{color:var(--fire);}
   nav .links{display:flex; gap:26px; align-items:center;}
-  nav a{color:var(--muted); text-decoration:none; font-size:12px; letter-spacing:1.5px; text-transform:uppercase; transition:color .2s ease;}
+  nav a{position:relative; color:var(--muted); text-decoration:none; font-size:12px; letter-spacing:1.5px; text-transform:uppercase; transition:color .2s ease; padding-bottom:4px;}
   nav a:hover{color:var(--fire);}
+  nav a::after{content:''; position:absolute; left:0; right:100%; bottom:0; height:1px; background:var(--fire2); transition:right .25s ease;}
+  nav a.active{color:var(--fire2);}
+  nav a.active::after{right:0;}
   nav .ig{color:var(--text); border:1px solid var(--line); padding:8px 16px; border-radius:999px; transition:border-color .2s ease, color .2s ease;}
   nav .ig:hover{border-color:var(--fire); color:var(--fire2);}
 
@@ -56,11 +118,12 @@
 
   /* HERO */
   .hero{min-height:92vh; display:flex; flex-direction:column; justify-content:center; padding:70px 0 60px; position:relative; overflow:hidden;}
-  .hero-glow{position:absolute; top:10%; right:-10%; width:520px; height:520px; background:radial-gradient(circle,rgba(138,28,28,0.14),transparent 65%); filter:blur(24px); pointer-events:none; z-index:0;}
+  .hero-glow{position:absolute; top:10%; right:-10%; width:520px; height:520px; background:radial-gradient(circle,rgba(138,28,28,0.14),transparent 65%); filter:blur(24px); pointer-events:none; z-index:0; animation:pulseGlow 6s ease-in-out infinite;}
+  @keyframes pulseGlow{0%,100%{opacity:1; transform:scale(1);} 50%{opacity:0.6; transform:scale(1.08);}}
   .hero-content{position:relative; z-index:2;}
   .tag{display:inline-flex; align-items:center; gap:8px; font-size:11px; letter-spacing:3px; text-transform:uppercase; color:var(--fire); border:1px solid rgba(138,28,28,0.4); padding:7px 16px; border-radius:999px; margin-bottom:30px; width:fit-content; opacity:0; animation:fadeUp .7s ease forwards;}
   .dot{width:6px; height:6px; background:var(--fire); border-radius:50%; box-shadow:0 0 8px var(--fire);}
-  h1.hero-name{font-size:clamp(44px,6.4vw,88px); line-height:1.08; letter-spacing:0.5px; opacity:0; animation:fadeUp .8s ease forwards .1s; word-break:break-word;}
+  h1.hero-name{font-size:clamp(44px,6.4vw,88px); line-height:1.08; letter-spacing:0.5px; opacity:0; animation:fadeUp .8s ease forwards .1s, glitchFlicker 7s ease-in-out infinite 3s; word-break:break-word;}
   h1.hero-name .accent{color:var(--fire);}
   .role-line{margin-top:24px; font-size:18px; color:var(--muted); max-width:560px; line-height:1.6; opacity:0; animation:fadeUp .8s ease forwards .25s;}
   .role-line strong{color:var(--text); font-weight:600;}
@@ -147,14 +210,32 @@
 
   /* JOURNEY TIMELINE */
   .timeline{position:relative; margin-top:32px; padding-left:30px;}
-  .timeline::before{content:''; position:absolute; left:5px; top:6px; bottom:6px; width:2px; background:var(--line);}
+  .timeline::before{content:''; position:absolute; left:5px; top:6px; bottom:6px; width:2px; background:var(--fire2); transform-origin:top; transform:scaleY(0); transition:transform 1.5s cubic-bezier(.2,.7,.3,1);}
+  .timeline.in::before{transform:scaleY(1);}
   .tl-item{position:relative; padding-bottom:36px;}
   .tl-item:last-child{padding-bottom:0;}
-  .tl-dot{position:absolute; left:-30px; top:3px; width:12px; height:12px; border-radius:50%; background:var(--fire); border:2px solid var(--bg); box-shadow:0 0 0 2px var(--line);}
+  .tl-dot{position:absolute; left:-30px; top:3px; width:12px; height:12px; border-radius:50%; background:var(--fire); border:2px solid var(--bg); box-shadow:0 0 0 2px var(--line); transition:box-shadow .3s, background .3s;}
   .tl-item:last-child .tl-dot{background:var(--fire2);}
+  .tl-item.in .tl-dot{box-shadow:0 0 0 2px var(--line), 0 0 14px rgba(214,69,69,0.6);}
   .tl-year{font-family:'Anton',sans-serif; font-size:12px; letter-spacing:2.5px; text-transform:uppercase; color:var(--fire2); margin-bottom:6px;}
   .tl-title{font-family:'Anton',sans-serif; font-size:21px; text-transform:uppercase; letter-spacing:.5px; margin-bottom:7px;}
   .tl-desc{font-size:14.5px; color:var(--muted); line-height:1.65; max-width:540px;}
+
+  /* LIVE GALLERY — auto-scrolling action-shot filmstrip */
+  .gallery-strip{overflow:hidden; margin-top:24px; border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:26px 0;}
+  .gallery-track{display:flex; gap:22px; width:max-content; animation:gscroll 34s linear infinite;}
+  .gallery-strip:hover .gallery-track{animation-play-state:paused;}
+  .gallery-item{position:relative; width:320px; aspect-ratio:3/2; border-radius:4px; overflow:hidden; border:1px solid var(--line); box-shadow:6px 6px 0 rgba(0,0,0,0.5); flex:none; transition:transform .2s, box-shadow .2s;}
+  .gallery-item:hover{transform:translate(-3px,-3px); box-shadow:9px 9px 0 rgba(0,0,0,0.5);}
+  .gallery-item img{width:100%; height:100%; object-fit:cover; display:block; filter:grayscale(1) contrast(1.15) brightness(0.9); transition:filter .3s, transform .5s;}
+  .gallery-item:hover img{filter:grayscale(0.25) contrast(1.1) sepia(0.12); transform:scale(1.06);}
+  .gallery-item::after{content:''; position:absolute; inset:0; background:linear-gradient(180deg,transparent 55%,rgba(0,0,0,0.8) 100%); pointer-events:none;}
+  .gallery-cap{position:absolute; left:0; right:0; bottom:0; padding:12px 16px 14px; z-index:2;}
+  .gallery-cap .t{font-family:'Anton',sans-serif; font-size:13px; letter-spacing:1px; text-transform:uppercase; color:var(--text); line-height:1.3;}
+  .gallery-cap .s{margin-top:3px; font-size:10.5px; letter-spacing:1px; text-transform:uppercase; color:var(--fire2);}
+  @keyframes gscroll{from{transform:translateX(0);} to{transform:translateX(-50%);}}
+  @media(max-width:640px){ .gallery-item{width:250px;} }
+  .full-bleed{width:100vw; position:relative; left:50%; right:50%; margin-left:-50vw; margin-right:-50vw;}
 
   /* WALL OF FAME — photo proof of the achievements board */
   .wof-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:26px; margin-top:10px;}
@@ -206,7 +287,7 @@
   .connect p{color:var(--muted); margin-top:14px; font-size:15px;}
   .connect .btn{margin-top:30px;}
 
-  footer{text-align:center; padding:34px 0 44px; color:#4a4a4a; font-size:11px; letter-spacing:2px; text-transform:uppercase; border-top:1px solid var(--line);}
+  footer{text-align:center; padding:34px 0 64px; color:#4a4a4a; font-size:11px; letter-spacing:2px; text-transform:uppercase; border-top:1px solid var(--line);}
 
   @media(max-width:640px){
     .stats{grid-template-columns:1fr; }
@@ -217,6 +298,24 @@
 </style>
 </head>
 <body>
+
+<div class="loader" id="pageLoader">
+  <div class="loader-pct" id="loaderPct">0%</div>
+  <div class="loader-bar"><div class="loader-bar-fill" id="loaderBarFill"></div></div>
+</div>
+
+<div class="corner-mark tl"></div>
+<div class="corner-mark tr"></div>
+<div class="corner-mark bl"></div>
+<div class="corner-mark br"></div>
+
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<div class="hud" id="hudBar">
+  <div class="hud-item"><span class="hud-dot"></span> SCRL <b id="hudScroll">00%</b></div>
+  <div class="hud-item hud-center">ON THE FLOOR: <b id="hudSection">INTRO</b></div>
+  <div class="hud-item">IST <b id="hudClock">00:00:00</b></div>
+</div>
 
 <nav>
   <div class="logo">PRIYANSH<span>.</span></div>
@@ -261,15 +360,15 @@
 
         <div class="stats">
           <div class="stat">
-            <div class="num">15.1<span>k</span></div>
+            <div class="num"><span class="count-num" data-target="15.1" data-decimals="1">0</span><span>k</span></div>
             <div class="cap">Followers</div>
           </div>
           <div class="stat">
-            <div class="num">164</div>
+            <div class="num"><span class="count-num" data-target="164" data-decimals="0">0</span></div>
             <div class="cap">Performances Shared</div>
           </div>
           <div class="stat">
-            <div class="num">900<span>k+</span></div>
+            <div class="num"><span class="count-num" data-target="900" data-decimals="0">0</span><span>k+</span></div>
             <div class="cap">Views on Top Reel</div>
           </div>
         </div>
@@ -287,47 +386,64 @@
     </div>
   </div>
 
+  <section id="gallery" style="padding-bottom:0; border-top:none;">
+    <div class="eyebrow reveal">Live From The Floor</div>
+    <h2 class="sec-title anton reveal">On Stage</h2>
+  </section>
+  <div class="gallery-strip full-bleed">
+    <div class="gallery-track">
+      <div class="gallery-item"><img src="gallery-1.jpg" alt="Priyansh airborne mid-battle on the dance floor"><div class="gallery-cap"><div class="t">Airborne</div><div class="s">Battle Floor</div></div></div>
+      <div class="gallery-item"><img src="gallery-2.jpg" alt="Priyansh jumping at Red Bull Dance Your Style National Final India"><div class="gallery-cap"><div class="t">Red Bull Dance Your Style</div><div class="s">National Final, India</div></div></div>
+      <div class="gallery-item"><img src="gallery-3.jpg" alt="Priyansh greeting the crowd at Red Bull Dance Your Style West Zone"><div class="gallery-cap"><div class="t">Crowd Love</div><div class="s">West Zone Qualifier</div></div></div>
+      <div class="gallery-item"><img src="gallery-4.jpg" alt="Priyansh with hand raised in victory at a battle"><div class="gallery-cap"><div class="t">Hands Up</div><div class="s">Judges' Call</div></div></div>
+      <div class="gallery-item"><img src="gallery-1.jpg" alt="Priyansh airborne mid-battle on the dance floor"><div class="gallery-cap"><div class="t">Airborne</div><div class="s">Battle Floor</div></div></div>
+      <div class="gallery-item"><img src="gallery-2.jpg" alt="Priyansh jumping at Red Bull Dance Your Style National Final India"><div class="gallery-cap"><div class="t">Red Bull Dance Your Style</div><div class="s">National Final, India</div></div></div>
+      <div class="gallery-item"><img src="gallery-3.jpg" alt="Priyansh greeting the crowd at Red Bull Dance Your Style West Zone"><div class="gallery-cap"><div class="t">Crowd Love</div><div class="s">West Zone Qualifier</div></div></div>
+      <div class="gallery-item"><img src="gallery-4.jpg" alt="Priyansh with hand raised in victory at a battle"><div class="gallery-cap"><div class="t">Hands Up</div><div class="s">Judges' Call</div></div></div>
+    </div>
+  </div>
+
   <section id="about" class="about">
-    <div class="eyebrow">About</div>
-    <h2 class="sec-title anton">The Story</h2>
-    <p>I'm a freestyle hip-hop dancer competing and performing within India's hip-hop battle circuit. Known for raw energy and character-driven freestyle, I battle, train, and perform under the <a class="patch-lddlm" href="https://www.instagram.com/lddlmofficiel/" target="_blank" rel="noopener">LDDLM</a> banner — a Paris underground crew with real international pedigree, the same lineage that produced Diablo and StalaMuerte of Los Diablos De La Muerte. I bring that same street style and stage presence to every floor I step on.</p>
+    <div class="eyebrow reveal">About</div>
+    <h2 class="sec-title anton reveal">The Story</h2>
+    <p class="reveal">I'm a freestyle hip-hop dancer competing and performing within India's hip-hop battle circuit. Known for raw energy and character-driven freestyle, I battle, train, and perform under the <a class="patch-lddlm" href="https://www.instagram.com/lddlmofficiel/" target="_blank" rel="noopener">LDDLM</a> banner — a Paris underground crew with real international pedigree, the same lineage that produced Diablo and StalaMuerte of Los Diablos De La Muerte. I bring that same street style and stage presence to every floor I step on.</p>
   </section>
 
   <section id="journey">
-    <div class="eyebrow">The Journey</div>
-    <h2 class="sec-title anton">Four Years In</h2>
+    <div class="eyebrow reveal">The Journey</div>
+    <h2 class="sec-title anton reveal">Four Years In</h2>
     <div class="timeline">
-      <div class="tl-item">
+      <div class="tl-item reveal-left">
         <div class="tl-dot"></div>
         <div class="tl-year">Year One</div>
         <div class="tl-title">Picked It Up</div>
         <div class="tl-desc">I started dancing four years ago as a hip-hop freestyle dancer — no shortcuts, just practice, repetition, and showing up.</div>
       </div>
-      <div class="tl-item">
+      <div class="tl-item reveal-left">
         <div class="tl-dot"></div>
         <div class="tl-year">Next</div>
         <div class="tl-title">Local Jams</div>
         <div class="tl-desc">I started getting into jams within India, testing what I had in front of real crowds and real cyphers.</div>
       </div>
-      <div class="tl-item">
+      <div class="tl-item reveal-left">
         <div class="tl-dot"></div>
         <div class="tl-year">Then</div>
         <div class="tl-title">First Wins, Wider Travel</div>
         <div class="tl-desc">Travel started opening up for me — and so did the wins. I took battles judged by international names in the scene.</div>
       </div>
-      <div class="tl-item">
+      <div class="tl-item reveal-left">
         <div class="tl-dot"></div>
         <div class="tl-year">The Leap</div>
         <div class="tl-title">Shirofes, Japan</div>
         <div class="tl-desc">I represented India on an international stage at Shirofes — one of Japan's biggest names in the battle scene.</div>
       </div>
-      <div class="tl-item">
+      <div class="tl-item reveal-left">
         <div class="tl-dot"></div>
         <div class="tl-year">The Crew</div>
         <div class="tl-title">Joined LDDLM</div>
         <div class="tl-desc">That run is what brought me into <a class="patch-lddlm" href="https://www.instagram.com/lddlmofficiel/" target="_blank" rel="noopener">LDDLM</a> — the crew I rep to this day.</div>
       </div>
-      <div class="tl-item">
+      <div class="tl-item reveal-left">
         <div class="tl-dot"></div>
         <div class="tl-year">Right Now</div>
         <div class="tl-title">Still Building</div>
@@ -336,53 +452,55 @@
     </div>
   </section>
 
+  <div class="kinetic"><div class="kinetic-track" id="kinetic1">SCOREBOARD <span>SCOREBOARD</span> SCOREBOARD <span>SCOREBOARD</span> SCOREBOARD <span>SCOREBOARD</span></div></div>
+
   <section id="achievements">
-    <div class="eyebrow">Selected Achievements</div>
-    <h2 class="sec-title anton">On The Board</h2>
+    <div class="eyebrow reveal">Selected Achievements</div>
+    <h2 class="sec-title anton reveal">On The Board</h2>
     <div class="ach-list">
-      <div class="ach-row">
+      <div class="ach-row reveal">
         <div class="ach-rank anton">01</div>
         <div class="ach-body">
           <div class="ach-title">Winner — Red Bull Dance Your Style 2025, West Zone</div>
           <div class="ach-desc">Mumbai qualifier · Advanced to the India Final</div>
         </div>
       </div>
-      <div class="ach-row">
+      <div class="ach-row reveal">
         <div class="ach-rank anton">02</div>
         <div class="ach-body">
           <div class="ach-title">Runner-Up — Jack & Rock Program</div>
           <div class="ach-desc">Judged by <a class="ig-tag" href="https://www.instagram.com/alexthecage/" target="_blank" rel="noopener">@alexthecage</a></div>
         </div>
       </div>
-      <div class="ach-row">
+      <div class="ach-row reveal">
         <div class="ach-rank anton">03</div>
         <div class="ach-body">
           <div class="ach-title">Winner — Foundry Jam</div>
           <div class="ach-desc">Judged by <a class="ig-tag" href="https://www.instagram.com/benwichert/" target="_blank" rel="noopener">@benwichert</a></div>
         </div>
       </div>
-      <div class="ach-row">
+      <div class="ach-row reveal">
         <div class="ach-rank anton">04</div>
         <div class="ach-body">
           <div class="ach-title">Winner — Circle Jam (2v2 Hip-Hop)</div>
           <div class="ach-desc">2-on-2 hip-hop division</div>
         </div>
       </div>
-      <div class="ach-row">
+      <div class="ach-row reveal">
         <div class="ach-rank anton">05</div>
         <div class="ach-body">
           <div class="ach-title">Runner-Up — Circle Jam (1v1)</div>
           <div class="ach-desc">Judged by <a class="ig-tag" href="https://www.instagram.com/gonzy2hot/" target="_blank" rel="noopener">@gonzy2hot</a></div>
         </div>
       </div>
-      <div class="ach-row">
+      <div class="ach-row reveal">
         <div class="ach-rank anton">06</div>
         <div class="ach-body">
           <div class="ach-title">Winner — 90s Jam (1v1 Hip-Hop)</div>
           <div class="ach-desc">1-on-1 hip-hop division</div>
         </div>
       </div>
-      <div class="ach-row">
+      <div class="ach-row reveal">
         <div class="ach-rank anton">07</div>
         <div class="ach-body">
           <div class="ach-title">Winner — 90s Jam (2v2 Hip-Hop)</div>
@@ -393,10 +511,10 @@
   </section>
 
   <section id="wall-of-fame">
-    <div class="eyebrow">The Proof</div>
-    <h2 class="sec-title anton">Wall Of Fame</h2>
+    <div class="eyebrow reveal">The Proof</div>
+    <h2 class="sec-title anton reveal">Wall Of Fame</h2>
     <div class="wof-grid">
-      <a class="wof-card" href="https://www.instagram.com/p/DJwsjMTyvCK/" target="_blank" rel="noopener">
+      <a class="wof-card reveal-scale" href="https://www.instagram.com/p/DJwsjMTyvCK/" target="_blank" rel="noopener">
         <div class="wof-photo">
           <img src="wof-redbull-westzone.jpg" alt="Priyansh at Red Bull Dance Your Style Qualifier West India">
         </div>
@@ -406,7 +524,7 @@
           <div class="wof-sub">Mumbai · India Final berth</div>
         </div>
       </a>
-      <a class="wof-card" href="https://www.instagram.com/p/C7uP--USx5s/" target="_blank" rel="noopener">
+      <a class="wof-card reveal-scale" href="https://www.instagram.com/p/C7uP--USx5s/" target="_blank" rel="noopener">
         <div class="wof-photo">
           <img src="wof-jackandrock.jpg" alt="Priyansh holding Runner Up poster at Jack and Rock Program">
         </div>
@@ -416,7 +534,7 @@
           <div class="wof-sub">1v1 Hip-Hop · Delhi</div>
         </div>
       </a>
-      <a class="wof-card" href="https://www.instagram.com/p/Cet10dftlEv/" target="_blank" rel="noopener">
+      <a class="wof-card reveal-scale" href="https://www.instagram.com/p/Cet10dftlEv/" target="_blank" rel="noopener">
         <div class="wof-photo">
           <img src="wof-circlejam.jpg" alt="Priyansh holding Finalist poster at The Circle Jam India">
         </div>
@@ -426,7 +544,7 @@
           <div class="wof-sub">1v1 Hip-Hop</div>
         </div>
       </a>
-      <a class="wof-card" href="https://www.instagram.com/p/DZzjXwFkeBZ/" target="_blank" rel="noopener">
+      <a class="wof-card reveal-scale" href="https://www.instagram.com/p/DZzjXwFkeBZ/" target="_blank" rel="noopener">
         <div class="wof-photo">
           <img src="wof-90sjam.jpg" alt="Priyansh holding two Winner posters at Ninety's Jam">
         </div>
@@ -439,11 +557,13 @@
     </div>
   </section>
 
+  <div class="kinetic"><div class="kinetic-track" id="kinetic2">RECEIPTS <span>RECEIPTS</span> RECEIPTS <span>RECEIPTS</span> RECEIPTS <span>RECEIPTS</span></div></div>
+
   <section id="watch">
-    <div class="eyebrow">Watch</div>
-    <h2 class="sec-title anton">On The Floor</h2>
+    <div class="eyebrow reveal">Watch</div>
+    <h2 class="sec-title anton reveal">On The Floor</h2>
     <div class="watch-grid">
-      <a class="reel-card" href="https://www.instagram.com/reel/DaGFWpeyp89/" target="_blank" rel="noopener">
+      <a class="reel-card reveal-scale" href="https://www.instagram.com/reel/DaGFWpeyp89/" target="_blank" rel="noopener">
         <div class="reel-thumb">
           <span class="reel-tag">Viral Clip</span>
           <div class="reel-play"></div>
@@ -454,7 +574,7 @@
           <div class="reel-cta">Watch on Instagram ↗</div>
         </div>
       </a>
-      <a class="reel-card" href="https://www.instagram.com/reel/DZ5EE_4SugM/" target="_blank" rel="noopener">
+      <a class="reel-card reveal-scale" href="https://www.instagram.com/reel/DZ5EE_4SugM/" target="_blank" rel="noopener">
         <div class="reel-thumb">
           <span class="reel-tag">#LDDLM Battle</span>
           <div class="reel-play"></div>
@@ -465,7 +585,7 @@
           <div class="reel-cta">Watch on Instagram ↗</div>
         </div>
       </a>
-      <a class="reel-card" href="https://www.instagram.com/reel/DZzfkYrSbLo/" target="_blank" rel="noopener">
+      <a class="reel-card reveal-scale" href="https://www.instagram.com/reel/DZzfkYrSbLo/" target="_blank" rel="noopener">
         <div class="reel-thumb">
           <span class="reel-tag">Collab</span>
           <div class="reel-play"></div>
@@ -480,29 +600,29 @@
   </section>
 
   <section>
-    <div class="eyebrow">Focus</div>
-    <h2 class="sec-title anton">What I Bring</h2>
+    <div class="eyebrow reveal">Focus</div>
+    <h2 class="sec-title anton reveal">What I Bring</h2>
     <div class="strip">
-      <span class="chip">Freestyle</span>
-      <span class="chip">1-on-1 Battles</span>
-      <span class="chip">Hip-Hop</span>
-      <span class="chip">Street Style</span>
-      <span class="chip">Character Work</span>
-      <span class="chip">Crew: <a class="patch-lddlm" href="https://www.instagram.com/lddlmofficiel/" target="_blank" rel="noopener">LDDLM</a></span>
+      <span class="chip reveal">Freestyle</span>
+      <span class="chip reveal">1-on-1 Battles</span>
+      <span class="chip reveal">Hip-Hop</span>
+      <span class="chip reveal">Street Style</span>
+      <span class="chip reveal">Character Work</span>
+      <span class="chip reveal">Crew: <a class="patch-lddlm" href="https://www.instagram.com/lddlmofficiel/" target="_blank" rel="noopener">LDDLM</a></span>
     </div>
   </section>
 
   <section>
-    <div class="eyebrow">Crowd Reaction</div>
-    <h2 class="sec-title anton">Straight From The Floor</h2>
+    <div class="eyebrow reveal">Crowd Reaction</div>
+    <h2 class="sec-title anton reveal">Straight From The Floor</h2>
     <div class="quotes">
-      <div class="quote">"The beast."<div class="who">— <a class="ig-tag" href="https://www.instagram.com/stalamuerte_stylezc/" target="_blank" rel="noopener">@stalamuerte_stylezc</a>, Los Diablos De La Muerte</div></div>
-      <div class="quote">"Why isn't the crowd hyped? That was insane 🔥🔥🔥"<div class="who">— Battle audience comment</div></div>
-      <div class="quote">"Killed it 🔥"<div class="who">— Battle audience comment</div></div>
+      <div class="quote reveal">"The beast."<div class="who">— <a class="ig-tag" href="https://www.instagram.com/stalamuerte_stylezc/" target="_blank" rel="noopener">@stalamuerte_stylezc</a>, Los Diablos De La Muerte</div></div>
+      <div class="quote reveal">"Why isn't the crowd hyped? That was insane 🔥🔥🔥"<div class="who">— Battle audience comment</div></div>
+      <div class="quote reveal">"Killed it 🔥"<div class="who">— Battle audience comment</div></div>
     </div>
   </section>
 
-  <div id="connect" class="connect">
+  <div id="connect" class="connect reveal-scale">
     <h2 class="anton">Let's <span class="accent">Connect</span></h2>
     <p>For battles, bookings, or collabs — hit me up on Instagram.</p>
     <a class="btn btn-primary" href="https://www.instagram.com/priyansh3604/" target="_blank" rel="noopener">@priyansh3604 ↗</a>
@@ -512,7 +632,181 @@
 </div>
 
 <script>
-  // Mouse-parallax for the floating hero decor
+  // ---------- PAGE LOADER ----------
+  (function(){
+    const loader = document.getElementById('pageLoader');
+    const pct = document.getElementById('loaderPct');
+    const fill = document.getElementById('loaderBarFill');
+    if (!loader) return;
+    if (sessionStorage.getItem('priyanshLoaded')) {
+      loader.classList.add('done');
+      return;
+    }
+    let n = 0;
+    const step = () => {
+      n += Math.random() * 18 + 6;
+      if (n >= 100) n = 100;
+      pct.textContent = Math.floor(n) + '%';
+      fill.style.width = n + '%';
+      if (n < 100) {
+        setTimeout(step, 90 + Math.random() * 70);
+      } else {
+        setTimeout(() => {
+          loader.classList.add('done');
+          sessionStorage.setItem('priyanshLoaded', '1');
+        }, 250);
+      }
+    };
+    step();
+  })();
+
+  // ---------- CUSTOM CURSOR (desktop only) ----------
+  if (window.matchMedia('(pointer:fine)').matches) {
+    document.body.classList.add('has-cursor');
+    const dot = document.createElement('div'); dot.className = 'cursor-dot';
+    const ring = document.createElement('div'); ring.className = 'cursor-ring';
+    document.body.append(dot, ring);
+    let tx = 0, ty = 0, rx = 0, ry = 0;
+    window.addEventListener('mousemove', (e) => {
+      tx = e.clientX; ty = e.clientY;
+      dot.style.left = tx + 'px'; dot.style.top = ty + 'px';
+    });
+    (function loop(){
+      rx += (tx - rx) * 0.18; ry += (ty - ry) * 0.18;
+      ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+      requestAnimationFrame(loop);
+    })();
+    document.querySelectorAll('a, button, .wof-card, .reel-card, .chip').forEach((el) => {
+      el.addEventListener('mouseenter', () => ring.classList.add('big'));
+      el.addEventListener('mouseleave', () => ring.classList.remove('big'));
+    });
+  }
+
+  // ---------- SCROLL PROGRESS BAR + HUD + KINETIC DRIFT ----------
+  const progressBar = document.getElementById('scrollProgress');
+  const hudBar = document.getElementById('hudBar');
+  const hudScroll = document.getElementById('hudScroll');
+  const kineticEls = document.querySelectorAll('.kinetic-track');
+  function updateProgress(){
+    const h = document.documentElement;
+    const scrolled = h.scrollHeight > h.clientHeight ? (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100 : 0;
+    if (progressBar) progressBar.style.width = scrolled + '%';
+    if (hudScroll) hudScroll.textContent = scrolled.toFixed(0) + '%';
+    if (hudBar) hudBar.classList.toggle('show', h.scrollTop > window.innerHeight * 0.6);
+    kineticEls.forEach((el, i) => {
+      const dir = i % 2 === 0 ? -1 : 1;
+      const offset = (h.scrollTop * 0.12 * dir) % 600;
+      el.style.transform = 'translateX(' + offset + 'px)';
+    });
+  }
+  window.addEventListener('scroll', updateProgress, { passive: true });
+  updateProgress();
+
+  // ---------- LIVE CLOCK (IST) ----------
+  const hudClock = document.getElementById('hudClock');
+  function updateClock(){
+    if (!hudClock) return;
+    const istMillis = Date.now() + 5.5 * 60 * 60000; // epoch ms is already UTC; shift +5:30 for IST
+    hudClock.textContent = new Date(istMillis).toISOString().substr(11, 8);
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
+
+  // ---------- NAV ACTIVE-SECTION HIGHLIGHT + HUD SECTION LABEL ----------
+  const navLinks = document.querySelectorAll('nav .links a');
+  const sectionMap = {};
+  const sectionLabels = { about: 'ABOUT', journey: 'JOURNEY', watch: 'WATCH', achievements: 'ACHIEVEMENTS', connect: 'CONNECT' };
+  const hudSection = document.getElementById('hudSection');
+  navLinks.forEach((link) => {
+    const id = link.getAttribute('href').slice(1);
+    const sec = document.getElementById(id);
+    if (sec) sectionMap[id] = link;
+  });
+  const navObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      const link = sectionMap[entry.target.id];
+      if (!link) return;
+      if (entry.isIntersecting) {
+        navLinks.forEach((l) => l.classList.remove('active'));
+        link.classList.add('active');
+        if (hudSection && sectionLabels[entry.target.id]) hudSection.textContent = sectionLabels[entry.target.id];
+      }
+    });
+  }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
+  Object.keys(sectionMap).forEach((id) => navObserver.observe(document.getElementById(id)));
+
+  // ---------- REVEAL ON SCROLL (with stagger) ----------
+  function stagger(selector, base = 80) {
+    document.querySelectorAll(selector).forEach((group) => {
+      [...group.children].forEach((child, i) => {
+        if (child.classList.contains('reveal') || child.classList.contains('reveal-scale') || child.classList.contains('reveal-left')) {
+          child.style.transitionDelay = (i * base) + 'ms';
+        }
+      });
+    });
+  }
+  stagger('.ach-list', 70);
+  stagger('.wof-grid', 100);
+  stagger('.watch-grid', 100);
+  stagger('.strip', 60);
+  stagger('.quotes', 90);
+  stagger('.timeline', 90);
+
+  const revealEls = document.querySelectorAll('.reveal, .reveal-scale, .reveal-left');
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+  revealEls.forEach((el) => revealObserver.observe(el));
+
+  // Timeline draw-in line
+  const timelineEl = document.querySelector('.timeline');
+  if (timelineEl) {
+    const tlObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in');
+          tlObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    tlObserver.observe(timelineEl);
+  }
+
+  // ---------- ANIMATED STAT COUNTERS ----------
+  function animateCount(el) {
+    const target = parseFloat(el.dataset.target);
+    const decimals = parseInt(el.dataset.decimals || '0', 10);
+    const dur = 1400;
+    let start = null;
+    function step(ts) {
+      if (!start) start = ts;
+      const progress = Math.min((ts - start) / dur, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const val = target * eased;
+      el.textContent = decimals > 0 ? val.toFixed(decimals) : Math.round(val);
+      if (progress < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  const statsEl = document.querySelector('.stats');
+  if (statsEl) {
+    const statsObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.querySelectorAll('.count-num').forEach(animateCount);
+          statsObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.4 });
+    statsObserver.observe(statsEl);
+  }
+
+  // ---------- Mouse-parallax for the floating hero decor ----------
   const heroStage = document.getElementById('heroStage');
   const floaters = document.querySelectorAll('.floater');
   if (heroStage && window.matchMedia('(min-width:761px)').matches) {
