@@ -287,9 +287,10 @@
 
   /* WATCH — real embedded Instagram reel + styled preview cards (embed reliably works for one of three; the others use Instagram-licensed audio which blocks their oEmbed, so they fall back to a polished preview card that links out) */
   .watch-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:22px; margin-top:10px; align-items:start; max-width:640px;}
-  .reel-embed{position:relative; background:var(--bg2); border:1px solid var(--line); border-radius:8px; overflow:hidden; box-shadow:6px 6px 0 rgba(0,0,0,0.45); padding:10px 10px 0; display:flex; justify-content:center; transition:transform .18s, box-shadow .18s; min-height:420px; width:100%; max-width:340px; margin:38px auto 0;}
-  .reel-embed > *{max-width:100% !important;}
+  .reel-embed-row{display:flex; gap:22px; justify-content:center; flex-wrap:wrap; margin-top:38px;}
+  .reel-embed{position:relative; background:var(--bg2); border:1px solid var(--line); border-radius:8px; overflow:hidden; box-shadow:6px 6px 0 rgba(0,0,0,0.45); padding:10px 10px 0; display:flex; justify-content:center; transition:transform .18s, box-shadow .18s; min-height:420px; width:100%; max-width:340px;}
   .reel-embed:hover{transform:translate(-3px,-3px); box-shadow:9px 9px 0 rgba(0,0,0,0.45);}
+  .reel-embed > *{max-width:100% !important;}
   .reel-embed iframe{border-radius:5px !important; max-width:100% !important;}
   .reel-embed .reel-tag{position:absolute; top:20px; left:20px; z-index:5; font-size:10px; letter-spacing:1.5px; text-transform:uppercase; color:var(--text); border:1px solid rgba(214,69,69,0.5); padding:4px 9px; border-radius:2px; background:var(--fire); box-shadow:3px 3px 0 rgba(0,0,0,0.5);}
   .reel-embed blockquote.instagram-media{margin:0 !important; min-width:auto !important;}
@@ -626,9 +627,15 @@
         </div>
       </a>
     </div>
-    <div class="reel-embed reveal-scale">
-      <span class="reel-tag">Collab</span>
-      <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DZzfkYrSbLo/" data-instgrm-version="14" style="width:100%;"></blockquote>
+    <div class="reel-embed-row">
+      <div class="reel-embed reveal-scale">
+        <span class="reel-tag">Collab</span>
+        <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DZzfkYrSbLo/" data-instgrm-version="14" style="width:100%;"></blockquote>
+      </div>
+      <div class="reel-embed reveal-scale">
+        <span class="reel-tag">Red Bull Final</span>
+        <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DW0vLDwgS4T/" data-instgrm-version="14" style="width:100%;"></blockquote>
+      </div>
     </div>
   </section>
 
