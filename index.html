@@ -19,24 +19,82 @@
 <link rel="shortcut icon" href="favicon.ico">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          bg: '#0a0806',
+          bg2: '#120f0d',
+          line: '#2a2422',
+          fire: '#8a1c1c',
+          fire2: '#d64545',
+          ink: '#ece6dd',
+          muted: '#8a8078',
+        },
+        fontFamily: {
+          anton: ['Anton', 'sans-serif'],
+          sans: ['Inter', 'sans-serif'],
+        },
+        keyframes: {
+          marquee: { from: { transform: 'translateX(0)' }, to: { transform: 'translateX(-100%)' } },
+          gscroll: { from: { transform: 'translateX(0)' }, to: { transform: 'translateX(-50%)' } },
+          floatY: {
+            '0%,100%': { transform: 'translate(var(--px,0px),var(--py,0px)) translateY(0) rotate(-6deg)' },
+            '50%': { transform: 'translate(var(--px,0px),var(--py,0px)) translateY(-20px) rotate(6deg)' },
+          },
+          heroSlide: {
+            '0%': { opacity: 0, transform: 'scale(1.12) translateX(0)' },
+            '4%': { opacity: 0.5 },
+            '22%': { opacity: 0.5, transform: 'scale(1.28) translateX(-1.5%)' },
+            '27%': { opacity: 0 },
+            '100%': { opacity: 0 },
+          },
+          pulseGlow: { '0%,100%': { opacity: 1, transform: 'scale(1)' }, '50%': { opacity: 0.6, transform: 'scale(1.08)' } },
+          fadeUp: { from: { opacity: 0, transform: 'translateY(16px)' }, to: { opacity: 1, transform: 'translateY(0)' } },
+          hudBlink: { '0%,100%': { opacity: 1 }, '50%': { opacity: 0.25 } },
+          markPulse: { '0%,100%': { opacity: 0.4, transform: 'scale(1)' }, '50%': { opacity: 1, transform: 'scale(1.6)' } },
+          ringPulse: { '0%': { transform: 'scale(1)', opacity: 0.9 }, '100%': { transform: 'scale(1.9)', opacity: 0 } },
+          embedGlow: {
+            '0%,100%': { boxShadow: '6px 6px 0 rgba(0,0,0,0.45)' },
+            '50%': { boxShadow: '6px 6px 0 rgba(0,0,0,0.45), 0 0 22px rgba(214,69,69,0.22)' },
+          },
+          glitchFlicker: {
+            '0%,93%,100%': { textShadow: 'none' },
+            '94%': { textShadow: '2px 0 #d64545, -2px 0 rgba(120,190,255,0.45)' },
+            '95%': { textShadow: '-2px 0 #d64545, 2px 0 rgba(120,190,255,0.45)' },
+            '96%': { textShadow: 'none' },
+          },
+        },
+        animation: {
+          marquee: 'marquee 18s linear infinite',
+          gscroll: 'gscroll 34s linear infinite',
+          floatY: 'floatY 7s ease-in-out infinite',
+          heroSlide: 'heroSlide 18s infinite',
+          pulseGlow: 'pulseGlow 6s ease-in-out infinite',
+          fadeUp: 'fadeUp 0.8s ease forwards',
+          hudBlink: 'hudBlink 1.6s ease-in-out infinite',
+          markPulse: 'markPulse 3.2s ease-in-out infinite',
+          ringPulse: 'ringPulse 2.2s ease-out infinite',
+          embedGlow: 'embedGlow 3.4s ease-in-out infinite',
+          glitchFlicker: 'glitchFlicker 7s ease-in-out infinite',
+        },
+      },
+    },
+  };
+</script>
+
 <style>
-  :root{
-    --bg:#0a0806;
-    --bg2:#120f0d;
-    --line:#2a2422;
-    --fire:#8a1c1c;
-    --fire2:#d64545;
-    --text:#ece6dd;
-    --muted:#8a8078;
-  }
-  *{box-sizing:border-box; margin:0; padding:0;}
-  html{scroll-behavior:smooth;}
-  body{
-    background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; overflow-x:hidden;
+  html { scroll-behavior: smooth; }
+  body {
     background-image:
       radial-gradient(circle at 10% 10%, rgba(138,28,28,0.10), transparent 40%),
       radial-gradient(circle at 90% 90%, rgba(138,28,28,0.07), transparent 40%);
-    position:relative;
   }
   body::after{
     content:''; position:fixed; inset:0; z-index:999; pointer-events:none; opacity:0.16; mix-blend-mode:overlay;
@@ -46,881 +104,787 @@
     content:''; position:fixed; inset:0; z-index:998; pointer-events:none; opacity:0.35;
     background:radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.55) 100%);
   }
-  ::selection{background:var(--fire); color:#0a0806;}
-  .wrap{max-width:960px; margin:0 auto; padding:0 32px;}
-  .anton{font-family:'Anton',sans-serif; text-transform:uppercase;}
-
-  /* SCROLL PROGRESS BAR */
-  .scroll-progress{position:fixed; top:0; left:0; height:3px; background:linear-gradient(90deg,var(--fire),var(--fire2)); z-index:1000; width:0%; box-shadow:0 0 10px rgba(214,69,69,0.6); transition:width .1s linear;}
-
-  /* BOTTOM HUD / SCOREBOARD BAR */
-  .hud{position:fixed; left:0; right:0; bottom:0; z-index:900; display:flex; justify-content:space-between; align-items:center; padding:10px 24px; background:rgba(6,5,4,0.82); backdrop-filter:blur(8px); border-top:1px solid var(--line); font-size:10.5px; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); transform:translateY(100%); transition:transform .4s ease;}
-  .hud.show{transform:translateY(0);}
-  .hud-item{display:flex; align-items:center; gap:7px;}
-  .hud-item b{color:var(--fire2); font-weight:700;}
-  .hud-dot{width:5px; height:5px; border-radius:50%; background:var(--fire2); animation:hudBlink 1.6s ease-in-out infinite;}
-  @keyframes hudBlink{0%,100%{opacity:1;} 50%{opacity:.25;}}
-  .hud-center{display:none;}
-  @media(min-width:760px){ .hud-center{display:flex;} }
-  @media(max-width:520px){ .hud{font-size:9px; padding:9px 16px;} }
-
-  /* KINETIC OUTLINE DIVIDER */
-  .kinetic{overflow:hidden; white-space:nowrap; border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:6px 0;}
-  .kinetic-track{display:inline-block; font-family:'Anton',sans-serif; font-size:clamp(70px,13vw,160px); letter-spacing:2px; text-transform:uppercase; color:transparent; -webkit-text-stroke:1.5px var(--line); text-stroke:1.5px var(--line); will-change:transform;}
-  .kinetic-track span{-webkit-text-stroke:1.5px var(--fire); text-stroke:1.5px var(--fire); margin-right:.35em;}
-
-  /* CORNER REGISTRATION MARKS */
-  .corner-mark{position:fixed; width:6px; height:6px; background:var(--fire2); z-index:60; opacity:.75; pointer-events:none; animation:markPulse 3.2s ease-in-out infinite;}
-  .corner-mark.tl{top:20px; left:20px;}
-  .corner-mark.tr{top:20px; right:20px; animation-delay:.4s;}
-  .corner-mark.bl{bottom:20px; left:20px; animation-delay:.8s;}
-  .corner-mark.br{bottom:20px; right:20px; animation-delay:1.2s;}
-  @keyframes markPulse{0%,100%{opacity:.4; transform:scale(1);} 50%{opacity:1; transform:scale(1.6);}}
-  @media(max-width:640px){ .corner-mark{display:none;} }
-
-  /* PAGE LOADER */
-  .loader{position:fixed; inset:0; z-index:3000; background:var(--bg); display:flex; align-items:center; justify-content:center; flex-direction:column; gap:14px; transition:opacity .6s ease, visibility .6s ease;}
-  .loader.done{opacity:0; visibility:hidden; pointer-events:none;}
-  .loader-pct{font-family:'Anton',sans-serif; font-size:15px; letter-spacing:4px; color:var(--fire2);}
-  .loader-bar{width:180px; height:2px; background:var(--line); overflow:hidden;}
-  .loader-bar-fill{height:100%; width:0%; background:var(--fire2); box-shadow:0 0 8px rgba(214,69,69,0.7);}
-
-  /* CUSTOM CURSOR (desktop only) */
-  .cursor-dot{position:fixed; top:0; left:0; width:7px; height:7px; border-radius:50%; background:var(--fire2); pointer-events:none; z-index:1500; transform:translate(-50%,-50%); opacity:0; transition:opacity .3s;}
-  .cursor-ring{position:fixed; top:0; left:0; width:32px; height:32px; border-radius:50%; border:1px solid rgba(214,69,69,0.55); pointer-events:none; z-index:1500; transform:translate(-50%,-50%); opacity:0; transition:width .25s ease, height .25s ease, border-color .25s ease, opacity .3s;}
-  .cursor-ring.big{width:56px; height:56px; border-color:var(--text);}
-  .has-cursor, .has-cursor a, .has-cursor button{cursor:none;}
-  .has-cursor .cursor-dot, .has-cursor .cursor-ring{opacity:1;}
-
-  /* GLITCH FLICKER ACCENT ON HERO NAME */
-  @keyframes glitchFlicker{
-    0%,93%,100%{text-shadow:none;}
-    94%{text-shadow:2px 0 var(--fire2), -2px 0 rgba(120,190,255,0.45);}
-    95%{text-shadow:-2px 0 var(--fire2), 2px 0 rgba(120,190,255,0.45);}
-    96%{text-shadow:none;}
-  }
-
-  /* REVEAL-ON-SCROLL SYSTEM */
-  .reveal{opacity:0; transform:translateY(30px); transition:opacity .7s cubic-bezier(.2,.7,.3,1), transform .7s cubic-bezier(.2,.7,.3,1);}
-  .reveal.in{opacity:1; transform:translateY(0);}
-  .reveal-scale{opacity:0; transform:scale(.9) translateY(14px); transition:opacity .65s cubic-bezier(.2,.7,.3,1), transform .65s cubic-bezier(.2,.7,.3,1);}
-  .reveal-scale.in{opacity:1; transform:scale(1) translateY(0);}
-  .reveal-left{opacity:0; transform:translateX(-34px); transition:opacity .7s cubic-bezier(.2,.7,.3,1), transform .7s cubic-bezier(.2,.7,.3,1);}
-  .reveal-left.in{opacity:1; transform:translateX(0);}
-  .sec-title.reveal{transition-delay:.08s;}
-
-  /* NAV */
-  nav{position:fixed; top:0; left:0; right:0; z-index:50; display:flex; justify-content:space-between; align-items:center; padding:22px 32px; backdrop-filter:blur(10px); background:rgba(5,5,5,0.55); border-bottom:1px solid var(--line);}
-  .logo{font-family:'Anton',sans-serif; letter-spacing:1px; font-size:16px;}
-  .logo span{color:var(--fire);}
-  nav .links{display:flex; gap:26px; align-items:center;}
-  nav a{position:relative; color:var(--muted); text-decoration:none; font-size:12px; letter-spacing:1.5px; text-transform:uppercase; transition:color .2s ease; padding-bottom:4px;}
-  nav a:hover{color:var(--fire);}
-  nav a::after{content:''; position:absolute; left:0; right:100%; bottom:0; height:1px; background:var(--fire2); transition:right .25s ease;}
-  nav a.active{color:var(--fire2);}
-  nav a.active::after{right:0;}
-  nav .ig{color:var(--text); border:1px solid var(--line); padding:8px 16px; border-radius:999px; transition:border-color .2s ease, color .2s ease;}
-  nav .ig:hover{border-color:var(--fire); color:var(--fire2);}
-
-  /* MARQUEE */
-  .marquee{border-top:1px solid var(--line); border-bottom:1px solid var(--line); overflow:hidden; white-space:nowrap; padding:14px 0; margin-top:70px; background:var(--bg2);}
-  .marquee-track{display:inline-block; padding-left:100%; animation:scroll 18s linear infinite;}
-  .marquee span{font-family:'Anton',sans-serif; font-size:14px; letter-spacing:3px; color:var(--muted); margin-right:40px; text-transform:uppercase;}
-  .marquee span.fire{color:var(--fire);}
-  @keyframes scroll{from{transform:translateX(0);} to{transform:translateX(-100%);}}
-
-  /* HERO */
-  .hero{min-height:92vh; display:flex; flex-direction:column; justify-content:center; padding:70px 0 60px; position:relative; overflow:hidden;}
-  .hero-bg{position:absolute; inset:0; z-index:0; overflow:hidden;}
-  .hero-bg img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; filter:grayscale(1) contrast(1.25) brightness(0.55); animation:heroSlide 18s infinite;}
-  .hero-bg img:nth-child(1){animation-delay:0s;}
-  .hero-bg img:nth-child(2){animation-delay:4.5s;}
-  .hero-bg img:nth-child(3){animation-delay:9s;}
-  .hero-bg img:nth-child(4){animation-delay:13.5s;}
-  .hero-bg::after{content:''; position:absolute; inset:0; z-index:1; background:linear-gradient(180deg,rgba(10,8,6,0.35) 0%,rgba(10,8,6,0.75) 60%,var(--bg) 100%), linear-gradient(90deg,rgba(10,8,6,0.55),transparent 45%);}
-  @keyframes heroSlide{
-    0%{opacity:0; transform:scale(1.12) translateX(0);}
-    4%{opacity:.5;}
-    22%{opacity:.5; transform:scale(1.28) translateX(-1.5%);}
-    27%{opacity:0;}
-    100%{opacity:0;}
-  }
-  @media(max-width:760px){ .hero-bg{opacity:.6;} }
-  .hero-glow{position:absolute; top:10%; right:-10%; width:520px; height:520px; background:radial-gradient(circle,rgba(138,28,28,0.14),transparent 65%); filter:blur(24px); pointer-events:none; z-index:0; animation:pulseGlow 6s ease-in-out infinite;}
-  @keyframes pulseGlow{0%,100%{opacity:1; transform:scale(1);} 50%{opacity:0.6; transform:scale(1.08);}}
-  .hero-content{position:relative; z-index:2;}
-  .tag{display:inline-flex; align-items:center; gap:8px; font-size:11px; letter-spacing:3px; text-transform:uppercase; color:var(--fire); border:1px solid rgba(138,28,28,0.4); padding:7px 16px; border-radius:999px; margin-bottom:30px; width:fit-content; opacity:0; animation:fadeUp .7s ease forwards;}
-  .dot{width:6px; height:6px; background:var(--fire); border-radius:50%; box-shadow:0 0 8px var(--fire);}
-  h1.hero-name{font-size:clamp(44px,6.4vw,88px); line-height:1.08; letter-spacing:0.5px; opacity:0; animation:fadeUp .8s ease forwards .1s, glitchFlicker 7s ease-in-out infinite 3s; word-break:break-word;}
-  h1.hero-name .accent{color:var(--fire);}
-  .role-line{margin-top:24px; font-size:18px; color:var(--muted); max-width:560px; line-height:1.6; opacity:0; animation:fadeUp .8s ease forwards .25s;}
-  .role-line strong{color:var(--text); font-weight:600;}
-  .cta-row{margin-top:38px; display:flex; gap:14px; flex-wrap:wrap; align-items:center; opacity:0; animation:fadeUp .8s ease forwards .4s;}
-  .btn{display:inline-flex; align-items:center; gap:8px; padding:15px 28px; border-radius:2px; font-size:12px; letter-spacing:1.5px; text-transform:uppercase; text-decoration:none; font-weight:700;}
-  .btn-primary{background:var(--fire); color:var(--text); border:1px solid #d8cfc2; box-shadow:4px 4px 0 rgba(0,0,0,0.5); transition:transform .15s, box-shadow .15s;}
-  .btn-primary:hover{transform:translate(-2px,-2px); box-shadow:6px 6px 0 rgba(0,0,0,0.5);}
-  .btn-outline{border:1px solid var(--line); color:var(--text); transition:.2s; border-radius:2px;}
-  .btn-outline:hover{border-color:var(--fire); color:var(--fire2); transform:translate(-2px,-2px);}
-  @keyframes fadeUp{from{opacity:0; transform:translateY(16px);} to{opacity:1; transform:translateY(0);}}
-
-  /* LDDLM CREW PATCH — matches their real black tee wordmark */
-  .patch-lddlm{display:inline-flex; align-items:center; background:#000; border:1px solid #2b2b2b; padding:3px 9px; border-radius:4px; font-family:'Inter',sans-serif; font-weight:800; font-size:0.82em; letter-spacing:0.5px; color:#fff; text-decoration:none; vertical-align:1px; transition:.2s;}
-  .patch-lddlm:hover{border-color:var(--fire); box-shadow:0 0 0 1px rgba(138,28,28,0.25);}
-  .crew-credit{margin-top:22px; display:flex; align-items:center; gap:10px; font-size:12px; color:var(--muted); opacity:0; animation:fadeUp .8s ease forwards .5s;}
-  .crew-credit span{letter-spacing:.5px;}
-  .lddlm-badge{height:34px; width:auto; border-radius:4px; border:1px solid var(--line); box-shadow:2px 2px 0 rgba(0,0,0,0.5); vertical-align:middle; flex-shrink:0;}
-
-  /* FLOATING 3D DECOR */
-  .floaters{position:absolute; inset:0; z-index:1; pointer-events:none;}
-  .floater{position:absolute; display:flex; align-items:center; justify-content:center; border-radius:50%; background:#141110; border:1px solid rgba(138,28,28,0.3); box-shadow:5px 5px 0 rgba(0,0,0,0.4); animation:floatY 7s ease-in-out infinite; transition:transform .15s ease-out; filter:saturate(.75);}
-  .floater span{filter:drop-shadow(0 2px 4px rgba(0,0,0,0.5)) saturate(.7) sepia(.15);}
-  .f1{width:64px; height:64px; font-size:26px; top:14%; right:8%; animation-duration:7s;}
-  .f2{width:50px; height:50px; font-size:21px; top:70%; right:3%; animation-duration:5.5s; animation-delay:.6s;}
-  .f3{width:52px; height:52px; font-size:22px; top:6%; right:38%; animation-duration:6.5s; animation-delay:.3s;}
-  .f4{width:42px; height:42px; font-size:18px; bottom:10%; right:30%; animation-duration:5s; animation-delay:1s;}
-  .f5{width:34px; height:34px; font-size:14px; top:48%; right:1%; animation-duration:4.5s; animation-delay:.4s;}
-  @keyframes floatY{
-    0%,100%{ transform: translate(var(--px,0px),var(--py,0px)) translateY(0) rotate(-6deg);}
-    50%{ transform: translate(var(--px,0px),var(--py,0px)) translateY(-20px) rotate(6deg);}
-  }
-  @media(max-width:760px){ .floater{display:none;} }
-
-  /* HERO SPLIT: TEXT + AI PORTRAIT */
-  .hero-inner{display:grid; grid-template-columns:1.25fr .75fr; gap:52px; align-items:center; position:relative; z-index:2;}
-  .avatar-stage{position:relative; display:flex; align-items:center; justify-content:center; min-height:420px; opacity:0; animation:fadeUp .9s ease forwards .15s;}
-  .avatar-glow{position:absolute; width:380px; height:380px; background:radial-gradient(circle,rgba(138,28,28,0.18),transparent 70%); filter:blur(30px); z-index:0;}
-  .avatar-frame{position:relative; z-index:1; width:300px; height:380px; border-radius:6px; background:linear-gradient(160deg,#161310,#0a0806); border:1px solid #3a322c; box-shadow:8px 8px 0 rgba(0,0,0,0.5); display:flex; align-items:center; justify-content:center; overflow:hidden;}
-  .avatar-frame img{width:100%; height:100%; object-fit:cover; display:block; filter:grayscale(70%) contrast(1.05) brightness(0.88) sepia(0.25); mix-blend-mode:normal;}
-  .avatar-frame .tint{position:absolute; inset:0; background:linear-gradient(160deg,rgba(138,28,28,0.35),rgba(10,8,6,0.4) 55%,rgba(0,0,0,0.6)); mix-blend-mode:multiply; pointer-events:none;}
-  .avatar-frame .tint2{position:absolute; inset:0; background:linear-gradient(0deg,rgba(8,6,5,0.85),transparent 45%); pointer-events:none;}
-  .avatar-placeholder{text-align:center; padding:26px; border:1px dashed rgba(138,28,28,0.3); border-radius:18px; margin:16px;}
-  .avatar-placeholder .mono{font-family:'Anton',sans-serif; font-size:56px; color:var(--fire); line-height:1;}
-  .avatar-placeholder .hint{margin-top:14px; font-size:10.5px; letter-spacing:1.5px; text-transform:uppercase; color:#666; line-height:1.6;}
-  .avatar-tag{position:absolute; z-index:2; bottom:-16px; left:50%; transform:translateX(-50%); background:var(--fire); color:var(--text); font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:9px 18px; border-radius:2px; border:1px solid #3a322c; box-shadow:3px 3px 0 rgba(0,0,0,0.5); white-space:nowrap;}
-  @media(max-width:900px){
-    .hero-inner{grid-template-columns:1fr; text-align:center;}
-    .avatar-stage{order:-1; min-height:340px;}
-    .role-line{margin-left:auto; margin-right:auto;}
-    .cta-row{justify-content:center;}
-    .tag{margin-left:auto; margin-right:auto;}
-  }
-
-  /* STATS */
-  .stats{display:grid; grid-template-columns:repeat(3,1fr); border:1px solid var(--line); border-radius:10px; overflow:hidden; margin-top:56px;}
-  .stat{padding:26px 20px; text-align:center; border-right:1px solid var(--line);}
-  .stat:last-child{border-right:none;}
-  .stat .num{font-family:'Anton',sans-serif; font-size:clamp(24px,4vw,34px); color:var(--fire2);}
-  .stat .num span{font-size:14px; color:var(--muted); font-family:'Inter',sans-serif;}
-  .stat .cap{margin-top:6px; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--muted);}
-
-  /* SECTION SHARED */
-  section{padding:80px 0; border-top:1px solid var(--line);}
-  .eyebrow{font-size:11px; letter-spacing:4px; text-transform:uppercase; color:var(--fire); margin-bottom:14px;}
-  .sec-title{font-family:'Anton',sans-serif; font-size:clamp(28px,5vw,46px); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:20px;}
-  .about p{font-size:18px; line-height:1.75; color:#c9c9c9; max-width:640px;}
-
-  /* ACHIEVEMENTS - scoreboard style */
-  .ach-list{margin-top:10px; border:1px solid var(--line); border-radius:10px; overflow:hidden;}
-  .ach-row{display:flex; align-items:center; gap:22px; padding:22px 26px; border-bottom:1px solid var(--line); transition:background .2s;}
-  .ach-row:last-child{border-bottom:none;}
-  .ach-row:hover{background:var(--bg2);}
-  .ach-rank{font-family:'Anton',sans-serif; font-size:32px; color:var(--line); min-width:50px;}
-  .ach-row:hover .ach-rank{color:var(--fire);}
-  .ach-body{flex:1;}
-  .ach-title{font-family:'Anton',sans-serif; font-size:19px; letter-spacing:0.5px; text-transform:uppercase; color:var(--fire2);}
-  .ach-desc{margin-top:4px; font-size:13.5px; color:var(--muted); line-height:1.5;}
-  .ig-tag{color:var(--fire2); text-decoration:none; border-bottom:1px solid rgba(214,69,69,0.35); transition:.2s;}
-  .ig-tag:hover{color:var(--text); border-bottom-color:var(--text);}
-
-  /* FOCUS CHIPS */
-  .strip{display:flex; gap:10px; flex-wrap:wrap; margin-top:8px;}
-  .chip{border:1px solid var(--line); color:var(--muted); font-size:12px; letter-spacing:1px; text-transform:uppercase; padding:10px 18px; border-radius:999px; transition:.2s;}
-  .chip:hover{border-color:var(--fire); color:var(--fire2);}
-
-  /* JOURNEY TIMELINE */
-  .timeline{position:relative; margin-top:32px; padding-left:30px;}
-  .timeline::before{content:''; position:absolute; left:5px; top:6px; bottom:6px; width:2px; background:var(--fire2); transform-origin:top; transform:scaleY(0); transition:transform 1.5s cubic-bezier(.2,.7,.3,1);}
-  .timeline.in::before{transform:scaleY(1);}
-  .tl-item{position:relative; padding-bottom:36px;}
-  .tl-item:last-child{padding-bottom:0;}
-  .tl-dot{position:absolute; left:-30px; top:3px; width:12px; height:12px; border-radius:50%; background:var(--fire); border:2px solid var(--bg); box-shadow:0 0 0 2px var(--line); transition:box-shadow .3s, background .3s;}
-  .tl-item:last-child .tl-dot{background:var(--fire2);}
-  .tl-item.in .tl-dot{box-shadow:0 0 0 2px var(--line), 0 0 14px rgba(214,69,69,0.6);}
-  .tl-year{font-family:'Anton',sans-serif; font-size:12px; letter-spacing:2.5px; text-transform:uppercase; color:var(--fire2); margin-bottom:6px;}
-  .tl-title{font-family:'Anton',sans-serif; font-size:21px; text-transform:uppercase; letter-spacing:.5px; margin-bottom:7px;}
-  .tl-desc{font-size:14.5px; color:var(--muted); line-height:1.65; max-width:540px;}
-
-  /* LIVE GALLERY — auto-scrolling action-shot filmstrip */
-  .gallery-strip{overflow:hidden; margin-top:24px; border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:26px 0;}
-  .gallery-track{display:flex; gap:22px; width:max-content; animation:gscroll 34s linear infinite;}
-  .gallery-strip:hover .gallery-track{animation-play-state:paused;}
-  .gallery-item{position:relative; width:320px; aspect-ratio:3/2; border-radius:4px; overflow:hidden; border:1px solid var(--line); box-shadow:6px 6px 0 rgba(0,0,0,0.5); flex:none; transition:transform .2s, box-shadow .2s;}
-  .gallery-item:hover{transform:translate(-3px,-3px); box-shadow:9px 9px 0 rgba(0,0,0,0.5);}
-  .gallery-item img{width:100%; height:100%; object-fit:cover; display:block; filter:grayscale(1) contrast(1.15) brightness(0.9); transition:filter .3s, transform .5s;}
-  .gallery-item:hover img{filter:grayscale(0.25) contrast(1.1) sepia(0.12); transform:scale(1.06);}
-  .gallery-item::after{content:''; position:absolute; inset:0; background:linear-gradient(180deg,transparent 55%,rgba(0,0,0,0.8) 100%); pointer-events:none;}
-  .gallery-cap{position:absolute; left:0; right:0; bottom:0; padding:12px 16px 14px; z-index:2;}
-  .gallery-cap .t{font-family:'Anton',sans-serif; font-size:13px; letter-spacing:1px; text-transform:uppercase; color:var(--text); line-height:1.3;}
-  .gallery-cap .s{margin-top:3px; font-size:10.5px; letter-spacing:1px; text-transform:uppercase; color:var(--fire2);}
-  @keyframes gscroll{from{transform:translateX(0);} to{transform:translateX(-50%);}}
-  @media(max-width:640px){ .gallery-item{width:250px;} }
-  .full-bleed{width:100vw; position:relative; left:50%; right:50%; margin-left:-50vw; margin-right:-50vw;}
-
-  /* WALL OF FAME — photo proof of the achievements board */
-  .wof-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:26px; margin-top:10px;}
-  .wof-card{position:relative; display:block; text-decoration:none; border-radius:4px; overflow:hidden; background:var(--bg2); border:1px solid var(--line); box-shadow:7px 7px 0 rgba(0,0,0,0.5); transition:transform .18s, box-shadow .18s;}
-  .wof-card:hover{transform:translate(-4px,-4px) rotate(-0.4deg); box-shadow:11px 11px 0 rgba(0,0,0,0.5);}
-  .wof-photo{aspect-ratio:3/4; overflow:hidden; position:relative;}
-  .wof-photo img{width:100%; height:100%; object-fit:cover; display:block; filter:grayscale(1) contrast(1.15) brightness(0.92); transition:filter .25s, transform .35s;}
-  .wof-card:hover .wof-photo img{filter:grayscale(0.35) contrast(1.1) sepia(0.15); transform:scale(1.04);}
-  .wof-photo::after{content:''; position:absolute; inset:0; background:linear-gradient(180deg,rgba(0,0,0,0) 45%,rgba(0,0,0,0.85) 100%); pointer-events:none;}
-  .wof-tag{position:absolute; top:12px; left:12px; z-index:2; font-family:'Anton',sans-serif; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--text); background:var(--fire); padding:5px 10px; box-shadow:3px 3px 0 rgba(0,0,0,0.5); transform:rotate(-2deg);}
-  .wof-info{position:absolute; left:0; right:0; bottom:0; z-index:2; padding:16px 16px 18px;}
-  .wof-title{font-family:'Anton',sans-serif; font-size:15px; letter-spacing:0.5px; text-transform:uppercase; color:var(--text); line-height:1.25;}
-  .wof-sub{margin-top:5px; font-size:11px; letter-spacing:1px; text-transform:uppercase; color:var(--muted);}
-  .wof-card:hover .wof-sub{color:var(--fire2);}
-  @media(max-width:900px){
-    .wof-grid{grid-template-columns:repeat(2,1fr);}
-  }
-  @media(max-width:520px){
-    .wof-grid{grid-template-columns:1fr; max-width:340px; margin-left:auto; margin-right:auto;}
-  }
-
-  /* WATCH — real embedded Instagram reel + styled preview cards (embed reliably works for one of three; the others use Instagram-licensed audio which blocks their oEmbed, so they fall back to a polished preview card that links out) */
-  .watch-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:22px; margin-top:10px; align-items:start; max-width:640px;}
-  .reel-embed-row{display:flex; gap:22px; justify-content:center; flex-wrap:wrap; margin-top:38px;}
-  .reel-embed{position:relative; background:var(--bg2); border:1px solid var(--line); border-radius:8px; overflow:hidden; box-shadow:6px 6px 0 rgba(0,0,0,0.45); padding:10px 10px 0; display:flex; justify-content:center; transition:transform .25s, box-shadow .25s; min-height:420px; width:100%; max-width:340px; animation:embedGlow 3.4s ease-in-out infinite;}
-  .reel-embed:hover{transform:translate(-4px,-4px) rotate(-0.6deg); box-shadow:11px 11px 0 rgba(0,0,0,0.5);}
-  @keyframes embedGlow{0%,100%{box-shadow:6px 6px 0 rgba(0,0,0,0.45);} 50%{box-shadow:6px 6px 0 rgba(0,0,0,0.45), 0 0 22px rgba(214,69,69,0.22);}}
-  .reel-embed > *{max-width:100% !important;}
-  .reel-embed iframe{border-radius:5px !important; max-width:100% !important;}
-  .reel-embed .reel-tag{position:absolute; top:20px; left:20px; z-index:5; font-size:10px; letter-spacing:1.5px; text-transform:uppercase; color:var(--text); border:1px solid rgba(214,69,69,0.5); padding:4px 9px; border-radius:2px; background:var(--fire); box-shadow:3px 3px 0 rgba(0,0,0,0.5);}
-  .reel-embed blockquote.instagram-media{margin:0 !important; min-width:auto !important;}
-  .reel-card{position:relative; background:var(--bg2); border:1px solid var(--line); border-radius:6px; overflow:hidden; box-shadow:6px 6px 0 rgba(0,0,0,0.45); display:flex; flex-direction:column; text-decoration:none; transition:box-shadow .2s; transform-style:preserve-3d; will-change:transform;}
-  .reel-card:nth-child(1){transform:rotate(-1.2deg);}
-  .reel-card:nth-child(2){transform:rotate(1.2deg);}
-  .reel-card:hover{box-shadow:12px 12px 0 rgba(0,0,0,0.5);}
-  .reel-thumb{position:relative; aspect-ratio:9/13; background:radial-gradient(circle at 50% 30%,rgba(156,43,33,0.25),transparent 60%), linear-gradient(160deg,#1a1512,#0a0806); display:flex; align-items:center; justify-content:center; border-bottom:1px solid var(--line); overflow:hidden;}
-  .reel-cover{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; filter:grayscale(1) contrast(1.2) brightness(0.75); transition:filter .35s, transform .35s; transform:scale(1.02);}
-  .reel-card:hover .reel-cover{filter:grayscale(0.25) contrast(1.15) brightness(0.85) sepia(0.1); transform:scale(1.1);}
-  .reel-thumb::after{content:''; position:absolute; inset:0; background:linear-gradient(180deg,rgba(0,0,0,0.15) 0%,rgba(0,0,0,0.1) 50%,rgba(0,0,0,0.75) 100%); pointer-events:none; z-index:1;}
-  .reel-thumb::before{content:''; position:absolute; left:0; right:0; height:40%; top:-45%; background:linear-gradient(180deg,transparent,rgba(255,255,255,0.16),transparent); z-index:2; pointer-events:none; transition:top 1.1s cubic-bezier(.3,.7,.3,1);}
-  .reel-card:hover .reel-thumb::before{top:110%;}
-  .rec-badge{position:absolute; top:12px; right:12px; z-index:5; display:flex; align-items:center; gap:5px; font-size:9.5px; letter-spacing:1.5px; color:#ff5050; background:rgba(0,0,0,0.55); border:1px solid rgba(255,80,80,0.4); padding:4px 8px; border-radius:2px;}
-  .rec-badge .dot{width:5px; height:5px; border-radius:50%; background:#ff3030; animation:hudBlink 1.1s ease-in-out infinite; box-shadow:0 0 6px #ff3030;}
-  .reel-play{position:relative; z-index:4; width:58px; height:58px; border-radius:50%; background:rgba(0,0,0,0.55); border:2px solid var(--fire2); display:flex; align-items:center; justify-content:center; box-shadow:0 0 24px rgba(156,43,33,0.35); transition:transform .25s;}
-  .reel-card:hover .reel-play{transform:scale(1.12);}
-  .reel-play::after{content:''; border-style:solid; border-width:9px 0 9px 15px; border-color:transparent transparent transparent var(--fire2); margin-left:4px;}
-  .reel-play::before{content:''; position:absolute; inset:-14px; border-radius:50%; border:1.5px solid rgba(214,69,69,0.55); animation:ringPulse 2.2s ease-out infinite;}
-  .reel-thumb .ring2{content:''; position:absolute; width:58px; height:58px; border-radius:50%; border:1.5px solid rgba(214,69,69,0.4); z-index:3; animation:ringPulse 2.2s ease-out infinite .7s;}
-  @keyframes ringPulse{0%{transform:scale(1); opacity:.9;} 100%{transform:scale(1.9); opacity:0;}}
-  .reel-thumb .reel-tag{position:absolute; top:12px; left:12px; z-index:5; font-size:10px; letter-spacing:1.5px; text-transform:uppercase; color:var(--fire2); border:1px solid rgba(156,43,33,0.4); padding:4px 9px; border-radius:2px; background:rgba(0,0,0,0.55);}
-  .reel-body{position:relative; z-index:2; padding:16px 18px 18px;}
-  .reel-caption{font-size:13.5px; color:var(--text); line-height:1.55;}
-  .reel-meta{margin-top:12px; display:flex; justify-content:space-between; align-items:center; font-size:11.5px; color:var(--muted); letter-spacing:.5px;}
-  .reel-likes{color:var(--fire2); font-weight:700; font-family:'Anton',sans-serif; letter-spacing:.5px;}
-  .reel-cta{margin-top:6px; font-size:10.5px; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted);}
-  .reel-card:hover .reel-cta{color:var(--fire2);}
-  @media(max-width:900px){
-    .watch-grid{grid-template-columns:1fr; max-width:400px; margin-left:auto; margin-right:auto;}
-  }
-
-  /* QUOTES */
-  .quotes{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:10px; overflow:hidden; margin-top:10px;}
-  .quote{background:var(--bg2); padding:24px; font-size:14px; color:#d6d6d6; line-height:1.6;}
-  .quote .who{margin-top:12px; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted);}
-
-  /* CONNECT */
-  .connect{text-align:center; padding:100px 0 80px;}
-  .connect h2{font-family:'Anton',sans-serif; font-size:clamp(34px,7vw,64px); text-transform:uppercase; letter-spacing:0.5px;}
-  .connect h2 .accent{color:var(--fire);}
-  .connect p{color:var(--muted); margin-top:14px; font-size:15px;}
-  .connect .btn{margin-top:30px;}
-
-  footer{text-align:center; padding:34px 0 64px; color:#4a4a4a; font-size:11px; letter-spacing:2px; text-transform:uppercase; border-top:1px solid var(--line);}
-
-  @media(max-width:640px){
-    .stats{grid-template-columns:1fr; }
-    .stat{border-right:none; border-bottom:1px solid var(--line);}
-    .stat:last-child{border-bottom:none;}
-    nav .links{display:none;}
-  }
+  ::selection{ background:#8a1c1c; color:#0a0806; }
+  .kinetic-track{ -webkit-text-stroke:1.5px #2a2422; }
+  .kinetic-track span{ -webkit-text-stroke:1.5px #8a1c1c; }
+  .has-cursor, .has-cursor a, .has-cursor button{ cursor:none; }
+  .has-cursor .cursor-dot, .has-cursor .cursor-ring{ opacity:1; }
+  .reveal{ opacity:0; transform:translateY(30px); transition:opacity .7s cubic-bezier(.2,.7,.3,1), transform .7s cubic-bezier(.2,.7,.3,1); }
+  .reveal.in{ opacity:1; transform:translateY(0); }
+  .reveal-scale{ opacity:0; transform:scale(.9) translateY(14px); transition:opacity .65s cubic-bezier(.2,.7,.3,1), transform .65s cubic-bezier(.2,.7,.3,1); }
+  .reveal-scale.in{ opacity:1; transform:scale(1) translateY(0); }
+  .reveal-left{ opacity:0; transform:translateX(-34px); transition:opacity .7s cubic-bezier(.2,.7,.3,1), transform .7s cubic-bezier(.2,.7,.3,1); }
+  .reveal-left.in{ opacity:1; transform:translateX(0); }
+  nav a::after{ content:''; position:absolute; left:0; right:100%; bottom:0; height:1px; background:#d64545; transition:right .25s ease; }
+  nav a.active::after{ right:0; }
+  .timeline::before{ content:''; position:absolute; left:5px; top:6px; bottom:6px; width:2px; background:#d64545; transform-origin:top; transform:scaleY(0); transition:transform 1.5s cubic-bezier(.2,.7,.3,1); }
+  .timeline.in::before{ transform:scaleY(1); }
+  .tl-item:last-child .tl-dot{ background:#d64545; }
+  .tl-item.in .tl-dot{ box-shadow:0 0 0 2px #2a2422, 0 0 14px rgba(214,69,69,0.6); }
+  .hero-bg img:nth-child(1){ animation-delay:0s; }
+  .hero-bg img:nth-child(2){ animation-delay:4.5s; }
+  .hero-bg img:nth-child(3){ animation-delay:9s; }
+  .hero-bg img:nth-child(4){ animation-delay:13.5s; }
+  .hero-bg::after{ content:''; position:absolute; inset:0; z-index:1; background:linear-gradient(180deg,rgba(10,8,6,0.35) 0%,rgba(10,8,6,0.75) 60%,#0a0806 100%), linear-gradient(90deg,rgba(10,8,6,0.55),transparent 45%); }
+  .corner-mark.tr{ animation-delay:.4s; }
+  .corner-mark.bl{ animation-delay:.8s; }
+  .corner-mark.br{ animation-delay:1.2s; }
+  .reel-card:nth-child(1){ transform:rotate(-1.2deg); }
+  .reel-card:nth-child(2){ transform:rotate(1.2deg); }
+  .reel-thumb::before{ content:''; position:absolute; left:0; right:0; height:40%; top:-45%; background:linear-gradient(180deg,transparent,rgba(255,255,255,0.16),transparent); z-index:2; pointer-events:none; transition:top 1.1s cubic-bezier(.3,.7,.3,1); }
+  .reel-card:hover .reel-thumb::before{ top:110%; }
+  .reel-play::after{ content:''; border-style:solid; border-width:9px 0 9px 15px; border-color:transparent transparent transparent #d64545; margin-left:4px; }
+  .avatar-frame .tint{ background:linear-gradient(160deg,rgba(138,28,28,0.35),rgba(10,8,6,0.4) 55%,rgba(0,0,0,0.6)); mix-blend-mode:multiply; }
+  .avatar-frame .tint2{ background:linear-gradient(0deg,rgba(8,6,5,0.85),transparent 45%); }
+  .wof-photo::after{ content:''; position:absolute; inset:0; background:linear-gradient(180deg,rgba(0,0,0,0) 45%,rgba(0,0,0,0.85) 100%); pointer-events:none; }
+  .gallery-item::after{ content:''; position:absolute; inset:0; background:linear-gradient(180deg,transparent 55%,rgba(0,0,0,0.8) 100%); pointer-events:none; }
+  .full-bleed{ width:100vw; position:relative; left:50%; right:50%; margin-left:-50vw; margin-right:-50vw; }
+  @media(max-width:640px){ .corner-mark{ display:none; } }
+  @media(max-width:760px){ .floater{ display:none; } .hero-bg{ opacity:.6; } }
+  @media(min-width:760px){ .hud-center{ display:flex; } }
 </style>
 </head>
-<body>
+<body class="bg-bg text-ink font-sans overflow-x-hidden relative">
 
-<div class="loader" id="pageLoader">
-  <div class="loader-pct" id="loaderPct">0%</div>
-  <div class="loader-bar"><div class="loader-bar-fill" id="loaderBarFill"></div></div>
-</div>
+<div id="root"></div>
 
-<div class="corner-mark tl"></div>
-<div class="corner-mark tr"></div>
-<div class="corner-mark bl"></div>
-<div class="corner-mark br"></div>
+<script type="text/babel">
+const { useState, useEffect, useRef } = React;
 
-<div class="scroll-progress" id="scrollProgress"></div>
+/* ---------------- DATA ---------------- */
 
-<div class="hud" id="hudBar">
-  <div class="hud-item"><span class="hud-dot"></span> SCRL <b id="hudScroll">00%</b></div>
-  <div class="hud-item hud-center">ON THE FLOOR: <b id="hudSection">INTRO</b></div>
-  <div class="hud-item">IST <b id="hudClock">00:00:00</b></div>
-</div>
+const NAV_LINKS = [
+  { id: 'about', label: 'About' },
+  { id: 'journey', label: 'Journey' },
+  { id: 'watch', label: 'Watch' },
+  { id: 'achievements', label: 'Achievements' },
+  { id: 'connect', label: 'Connect' },
+];
+const SECTION_LABELS = { about: 'ABOUT', journey: 'JOURNEY', watch: 'WATCH', achievements: 'ACHIEVEMENTS', connect: 'CONNECT' };
 
-<nav>
-  <div class="logo">PRIYANSH<span>.</span></div>
-  <div class="links">
-    <a href="#about">About</a>
-    <a href="#journey">Journey</a>
-    <a href="#watch">Watch</a>
-    <a href="#achievements">Achievements</a>
-    <a href="#connect">Connect</a>
-  </div>
-  <a class="ig" href="https://www.instagram.com/priyansh3604/" target="_blank" rel="noopener">Instagram ↗</a>
-</nav>
+const STATS = [
+  { target: 16.1, decimals: 1, unit: 'k', label: 'Followers' },
+  { target: 165, decimals: 0, unit: '', label: 'Performances Shared' },
+  { target: 593, decimals: 0, unit: 'k+', label: 'Views on Top Reel' },
+];
 
-<div class="marquee">
-  <div class="marquee-track">
-    <span class="fire">TOP DANCER</span><span>LDDLM CREW</span><span class="fire">HIP-HOP</span><span>FREESTYLE BATTLES</span><span class="fire">TOP DANCER</span><span>LDDLM CREW</span><span class="fire">HIP-HOP</span><span>FREESTYLE BATTLES</span>
-  </div>
-</div>
+const FLOATERS = [
+  { cls: 'w-16 h-16 text-2xl top-[14%] right-[8%]', delay: '0s', depth: 0.7, icon: '🔥' },
+  { cls: 'w-[50px] h-[50px] text-xl top-[70%] right-[3%]', delay: '.6s', depth: 0.4, icon: '💿' },
+  { cls: 'w-[52px] h-[52px] text-xl top-[6%] right-[38%]', delay: '.3s', depth: 0.9, icon: '👑' },
+  { cls: 'w-[42px] h-[42px] text-lg bottom-[10%] right-[30%]', delay: '1s', depth: 0.5, icon: '🎤' },
+  { cls: 'w-[34px] h-[34px] text-sm top-[48%] right-[1%]', delay: '.4s', depth: 0.6, icon: '✨' },
+];
 
-<div class="wrap">
+const GALLERY_BASE = [
+  { img: 'gallery-1.jpg', alt: 'Priyansh airborne mid-battle on the dance floor', t: 'Airborne', s: 'Battle Floor' },
+  { img: 'gallery-2.jpg', alt: 'Priyansh jumping at Red Bull Dance Your Style National Final India', t: 'Red Bull Dance Your Style', s: 'National Final, India' },
+  { img: 'gallery-3.jpg', alt: 'Priyansh greeting the crowd at Red Bull Dance Your Style West Zone', t: 'Crowd Love', s: 'West Zone Qualifier' },
+  { img: 'gallery-4.jpg', alt: 'Priyansh with hand raised in victory at a battle', t: 'Hands Up', s: "Judges' Call" },
+];
+const GALLERY = [...GALLERY_BASE, ...GALLERY_BASE];
 
-  <div class="hero" id="heroStage">
-    <div class="hero-bg">
-      <img src="gallery-2.jpg" alt="">
-      <img src="wof-redbull-westzone.jpg" alt="">
-      <img src="gallery-4.jpg" alt="">
-      <img src="gallery-3.jpg" alt="">
-    </div>
-    <div class="hero-glow"></div>
-    <div class="floaters">
-      <div class="floater f1" data-depth="0.7"><span>🔥</span></div>
-      <div class="floater f2" data-depth="0.4"><span>💿</span></div>
-      <div class="floater f3" data-depth="0.9"><span>👑</span></div>
-      <div class="floater f4" data-depth="0.5"><span>🎤</span></div>
-      <div class="floater f5" data-depth="0.6"><span>✨</span></div>
-    </div>
+const TIMELINE = [
+  { year: 'Year One', title: 'Picked It Up', desc: 'I started dancing four years ago as a hip-hop freestyle dancer — no shortcuts, just practice, repetition, and showing up.' },
+  { year: 'Next', title: 'Local Jams', desc: 'I started getting into jams within India, testing what I had in front of real crowds and real cyphers.' },
+  { year: 'Then', title: 'First Wins, Wider Travel', desc: 'Travel started opening up for me — and so did the wins. I took battles judged by international names in the scene.' },
+  { year: 'The Leap', title: 'Shirofes, Japan', desc: "I represented India on an international stage at Shirofes — one of Japan's biggest names in the battle scene." },
+  { year: 'The Crew', title: 'Joined LDDLM', crew: true },
+  { year: 'Right Now', title: 'Still Building', desc: "Four years in, and the run's still going — more floors, more battles, more reasons to watch." },
+];
 
-    <div class="hero-inner">
-      <div class="hero-content">
-        <span class="tag"><span class="dot"></span>Hip-Hop / Freestyle Battle Circuit · India</span>
-        <h1 class="hero-name anton">Priyansh<br>Shriva<span class="accent">stava</span></h1>
-        <p class="role-line"><strong>I'm a Hip-Hop Dancer</strong> — Battle Competitor repping <a class="patch-lddlm" href="https://www.instagram.com/lddlmofficiel/" target="_blank" rel="noopener">LDDLM</a>. Raw energy, sharp character work, and a growing list of titles across India's battle scene.</p>
-        <div class="cta-row">
-          <a class="btn btn-primary" href="#journey">Follow the Journey</a>
-          <a class="btn btn-outline" href="#achievements">See Achievements</a>
-        </div>
-        <div class="crew-credit"><img class="lddlm-badge" src="lddlm-badge.png" alt="LDDLM crew emblem"> <a class="patch-lddlm" href="https://www.instagram.com/lddlmofficiel/" target="_blank" rel="noopener">LDDLM</a> <span>· 16.7k followers · "Welcome to LDDLM"</span></div>
+const ACHIEVEMENTS = [
+  { title: 'Winner — Red Bull Dance Your Style 2025, West Zone', desc: 'Mumbai qualifier · Advanced to the India Final' },
+  { title: 'Runner-Up — Jack & Rock Program', judge: 'alexthecage' },
+  { title: 'Winner — Foundry Jam', judge: 'benwichert' },
+  { title: 'Winner — Circle Jam (2v2 Hip-Hop)', desc: '2-on-2 hip-hop division' },
+  { title: 'Runner-Up — Circle Jam (1v1)', judge: 'gonzy2hot' },
+  { title: 'Winner — 90s Jam (1v1 Hip-Hop)', desc: '1-on-1 hip-hop division' },
+  { title: 'Winner — 90s Jam (2v2 Hip-Hop)', judge: 'junioryudat' },
+];
 
-        <div class="stats">
-          <div class="stat">
-            <div class="num"><span class="count-num" data-target="16.1" data-decimals="1">0</span><span>k</span></div>
-            <div class="cap">Followers</div>
-          </div>
-          <div class="stat">
-            <div class="num"><span class="count-num" data-target="165" data-decimals="0">0</span></div>
-            <div class="cap">Performances Shared</div>
-          </div>
-          <div class="stat">
-            <div class="num"><span class="count-num" data-target="593" data-decimals="0">0</span><span>k+</span></div>
-            <div class="cap">Views on Top Reel</div>
-          </div>
-        </div>
-      </div>
+const WALL_OF_FAME = [
+  { href: 'https://www.instagram.com/p/DJwsjMTyvCK/', img: 'wof-redbull-westzone.jpg', alt: 'Priyansh at Red Bull Dance Your Style Qualifier West India', tag: 'Winner', title: 'Red Bull Dance Your Style — West Zone', sub: 'Mumbai · India Final berth' },
+  { href: 'https://www.instagram.com/p/C7uP--USx5s/', img: 'wof-jackandrock.jpg', alt: 'Priyansh holding Runner Up poster at Jack and Rock Program', tag: 'Runner-Up', title: 'Jack & Rock Program', sub: '1v1 Hip-Hop · Delhi' },
+  { href: 'https://www.instagram.com/p/Cet10dftlEv/', img: 'wof-circlejam.jpg', alt: 'Priyansh holding Finalist poster at The Circle Jam India', tag: 'Finalist', title: 'The Circle Jam India', sub: '1v1 Hip-Hop' },
+  { href: 'https://www.instagram.com/p/DZzjXwFkeBZ/', img: 'wof-90sjam.jpg', alt: "Priyansh holding two Winner posters at Ninety's Jam", tag: 'Double Winner', title: "Ninety's Jam", sub: '1v1 & 2v2 Hip-Hop' },
+];
 
-      <div class="avatar-stage">
-        <div class="avatar-glow"></div>
-        <div class="avatar-frame">
-          <img src="priyansh-hero.jpg" alt="Priyansh Shrivastava">
-          <div class="tint"></div>
-          <div class="tint2"></div>
-        </div>
-        <div class="avatar-tag">Hip-Hop · Freestyle</div>
-      </div>
-    </div>
-  </div>
+const REELS = [
+  { href: 'https://www.instagram.com/reel/DaGFWpeyp89/', img: 'reel-cover-1.jpg', alt: 'Priyansh performing on the battle floor, crowd surrounding', tag: 'Viral Clip', caption: 'Battle floor, crowd going off — hip-hop freestyle round.', likes: '49.9K+' },
+  { href: 'https://www.instagram.com/reel/DZ5EE_4SugM/', img: 'reel-cover-2.jpg', alt: 'Priyansh in a TellaX battle round on stage', tag: '#LDDLM Battle', caption: 'TellaX battle round — freestyle to "Squideliciouz Bounce."', likes: '1.7K+' },
+];
 
-  <section id="gallery" style="padding-bottom:0; border-top:none;">
-    <div class="eyebrow reveal">Live From The Floor</div>
-    <h2 class="sec-title anton reveal">On Stage</h2>
-  </section>
-  <div class="gallery-strip full-bleed">
-    <div class="gallery-track">
-      <div class="gallery-item"><img src="gallery-1.jpg" alt="Priyansh airborne mid-battle on the dance floor"><div class="gallery-cap"><div class="t">Airborne</div><div class="s">Battle Floor</div></div></div>
-      <div class="gallery-item"><img src="gallery-2.jpg" alt="Priyansh jumping at Red Bull Dance Your Style National Final India"><div class="gallery-cap"><div class="t">Red Bull Dance Your Style</div><div class="s">National Final, India</div></div></div>
-      <div class="gallery-item"><img src="gallery-3.jpg" alt="Priyansh greeting the crowd at Red Bull Dance Your Style West Zone"><div class="gallery-cap"><div class="t">Crowd Love</div><div class="s">West Zone Qualifier</div></div></div>
-      <div class="gallery-item"><img src="gallery-4.jpg" alt="Priyansh with hand raised in victory at a battle"><div class="gallery-cap"><div class="t">Hands Up</div><div class="s">Judges' Call</div></div></div>
-      <div class="gallery-item"><img src="gallery-1.jpg" alt="Priyansh airborne mid-battle on the dance floor"><div class="gallery-cap"><div class="t">Airborne</div><div class="s">Battle Floor</div></div></div>
-      <div class="gallery-item"><img src="gallery-2.jpg" alt="Priyansh jumping at Red Bull Dance Your Style National Final India"><div class="gallery-cap"><div class="t">Red Bull Dance Your Style</div><div class="s">National Final, India</div></div></div>
-      <div class="gallery-item"><img src="gallery-3.jpg" alt="Priyansh greeting the crowd at Red Bull Dance Your Style West Zone"><div class="gallery-cap"><div class="t">Crowd Love</div><div class="s">West Zone Qualifier</div></div></div>
-      <div class="gallery-item"><img src="gallery-4.jpg" alt="Priyansh with hand raised in victory at a battle"><div class="gallery-cap"><div class="t">Hands Up</div><div class="s">Judges' Call</div></div></div>
-    </div>
-  </div>
+const CHIPS = ['Freestyle', '1-on-1 Battles', 'Hip-Hop', 'Street Style', 'Character Work'];
 
-  <section id="about" class="about">
-    <div class="eyebrow reveal">About</div>
-    <h2 class="sec-title anton reveal">The Story</h2>
-    <p class="reveal">I'm a freestyle hip-hop dancer competing and performing within India's hip-hop battle circuit. Known for raw energy and character-driven freestyle, I battle, train, and perform under the <a class="patch-lddlm" href="https://www.instagram.com/lddlmofficiel/" target="_blank" rel="noopener">LDDLM</a> banner — a Paris underground crew with real international pedigree, the same lineage that produced Diablo and StalaMuerte of Los Diablos De La Muerte. I bring that same street style and stage presence to every floor I step on.</p>
-  </section>
+const QUOTES = [
+  { text: '"The beast."', crewQuote: true },
+  { text: '"Why isn\'t the crowd hyped? That was insane 🔥🔥🔥"', whoText: 'Battle audience comment' },
+  { text: '"Killed it 🔥"', whoText: 'Battle audience comment' },
+];
 
-  <section id="journey">
-    <div class="eyebrow reveal">The Journey</div>
-    <h2 class="sec-title anton reveal">Four Years In</h2>
-    <div class="timeline">
-      <div class="tl-item reveal-left">
-        <div class="tl-dot"></div>
-        <div class="tl-year">Year One</div>
-        <div class="tl-title">Picked It Up</div>
-        <div class="tl-desc">I started dancing four years ago as a hip-hop freestyle dancer — no shortcuts, just practice, repetition, and showing up.</div>
-      </div>
-      <div class="tl-item reveal-left">
-        <div class="tl-dot"></div>
-        <div class="tl-year">Next</div>
-        <div class="tl-title">Local Jams</div>
-        <div class="tl-desc">I started getting into jams within India, testing what I had in front of real crowds and real cyphers.</div>
-      </div>
-      <div class="tl-item reveal-left">
-        <div class="tl-dot"></div>
-        <div class="tl-year">Then</div>
-        <div class="tl-title">First Wins, Wider Travel</div>
-        <div class="tl-desc">Travel started opening up for me — and so did the wins. I took battles judged by international names in the scene.</div>
-      </div>
-      <div class="tl-item reveal-left">
-        <div class="tl-dot"></div>
-        <div class="tl-year">The Leap</div>
-        <div class="tl-title">Shirofes, Japan</div>
-        <div class="tl-desc">I represented India on an international stage at Shirofes — one of Japan's biggest names in the battle scene.</div>
-      </div>
-      <div class="tl-item reveal-left">
-        <div class="tl-dot"></div>
-        <div class="tl-year">The Crew</div>
-        <div class="tl-title">Joined LDDLM</div>
-        <div class="tl-desc">That run is what brought me into <a class="patch-lddlm" href="https://www.instagram.com/lddlmofficiel/" target="_blank" rel="noopener">LDDLM</a> — the crew I rep to this day.</div>
-      </div>
-      <div class="tl-item reveal-left">
-        <div class="tl-dot"></div>
-        <div class="tl-year">Right Now</div>
-        <div class="tl-title">Still Building</div>
-        <div class="tl-desc">Four years in, and the run's still going — more floors, more battles, more reasons to watch.</div>
-      </div>
-    </div>
-  </section>
+/* ---------------- HOOKS ---------------- */
 
-  <div class="kinetic"><div class="kinetic-track" id="kinetic1">SCOREBOARD <span>SCOREBOARD</span> SCOREBOARD <span>SCOREBOARD</span> SCOREBOARD <span>SCOREBOARD</span></div></div>
+function useSectionObserver(ids, hudSectionRef, setActiveId) {
+  useEffect(() => {
+    const els = ids.map((id) => document.getElementById(id)).filter(Boolean);
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setActiveId(entry.target.id);
+          if (hudSectionRef.current) hudSectionRef.current.textContent = SECTION_LABELS[entry.target.id] || '';
+        }
+      });
+    }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
+    els.forEach((el) => obs.observe(el));
+    return () => obs.disconnect();
+  }, []);
+}
 
-  <section id="achievements">
-    <div class="eyebrow reveal">Selected Achievements</div>
-    <h2 class="sec-title anton reveal">On The Board</h2>
-    <div class="ach-list">
-      <div class="ach-row reveal">
-        <div class="ach-rank anton">01</div>
-        <div class="ach-body">
-          <div class="ach-title">Winner — Red Bull Dance Your Style 2025, West Zone</div>
-          <div class="ach-desc">Mumbai qualifier · Advanced to the India Final</div>
-        </div>
-      </div>
-      <div class="ach-row reveal">
-        <div class="ach-rank anton">02</div>
-        <div class="ach-body">
-          <div class="ach-title">Runner-Up — Jack & Rock Program</div>
-          <div class="ach-desc">Judged by <a class="ig-tag" href="https://www.instagram.com/alexthecage/" target="_blank" rel="noopener">@alexthecage</a></div>
-        </div>
-      </div>
-      <div class="ach-row reveal">
-        <div class="ach-rank anton">03</div>
-        <div class="ach-body">
-          <div class="ach-title">Winner — Foundry Jam</div>
-          <div class="ach-desc">Judged by <a class="ig-tag" href="https://www.instagram.com/benwichert/" target="_blank" rel="noopener">@benwichert</a></div>
-        </div>
-      </div>
-      <div class="ach-row reveal">
-        <div class="ach-rank anton">04</div>
-        <div class="ach-body">
-          <div class="ach-title">Winner — Circle Jam (2v2 Hip-Hop)</div>
-          <div class="ach-desc">2-on-2 hip-hop division</div>
-        </div>
-      </div>
-      <div class="ach-row reveal">
-        <div class="ach-rank anton">05</div>
-        <div class="ach-body">
-          <div class="ach-title">Runner-Up — Circle Jam (1v1)</div>
-          <div class="ach-desc">Judged by <a class="ig-tag" href="https://www.instagram.com/gonzy2hot/" target="_blank" rel="noopener">@gonzy2hot</a></div>
-        </div>
-      </div>
-      <div class="ach-row reveal">
-        <div class="ach-rank anton">06</div>
-        <div class="ach-body">
-          <div class="ach-title">Winner — 90s Jam (1v1 Hip-Hop)</div>
-          <div class="ach-desc">1-on-1 hip-hop division</div>
-        </div>
-      </div>
-      <div class="ach-row reveal">
-        <div class="ach-rank anton">07</div>
-        <div class="ach-body">
-          <div class="ach-title">Winner — 90s Jam (2v2 Hip-Hop)</div>
-          <div class="ach-desc">Judged by <a class="ig-tag" href="https://www.instagram.com/junioryudat/" target="_blank" rel="noopener">@junioryudat</a></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="wall-of-fame">
-    <div class="eyebrow reveal">The Proof</div>
-    <h2 class="sec-title anton reveal">Wall Of Fame</h2>
-    <div class="wof-grid">
-      <a class="wof-card reveal-scale" href="https://www.instagram.com/p/DJwsjMTyvCK/" target="_blank" rel="noopener">
-        <div class="wof-photo">
-          <img src="wof-redbull-westzone.jpg" alt="Priyansh at Red Bull Dance Your Style Qualifier West India">
-        </div>
-        <div class="wof-tag">Winner</div>
-        <div class="wof-info">
-          <div class="wof-title">Red Bull Dance Your Style — West Zone</div>
-          <div class="wof-sub">Mumbai · India Final berth</div>
-        </div>
-      </a>
-      <a class="wof-card reveal-scale" href="https://www.instagram.com/p/C7uP--USx5s/" target="_blank" rel="noopener">
-        <div class="wof-photo">
-          <img src="wof-jackandrock.jpg" alt="Priyansh holding Runner Up poster at Jack and Rock Program">
-        </div>
-        <div class="wof-tag">Runner-Up</div>
-        <div class="wof-info">
-          <div class="wof-title">Jack &amp; Rock Program</div>
-          <div class="wof-sub">1v1 Hip-Hop · Delhi</div>
-        </div>
-      </a>
-      <a class="wof-card reveal-scale" href="https://www.instagram.com/p/Cet10dftlEv/" target="_blank" rel="noopener">
-        <div class="wof-photo">
-          <img src="wof-circlejam.jpg" alt="Priyansh holding Finalist poster at The Circle Jam India">
-        </div>
-        <div class="wof-tag">Finalist</div>
-        <div class="wof-info">
-          <div class="wof-title">The Circle Jam India</div>
-          <div class="wof-sub">1v1 Hip-Hop</div>
-        </div>
-      </a>
-      <a class="wof-card reveal-scale" href="https://www.instagram.com/p/DZzjXwFkeBZ/" target="_blank" rel="noopener">
-        <div class="wof-photo">
-          <img src="wof-90sjam.jpg" alt="Priyansh holding two Winner posters at Ninety's Jam">
-        </div>
-        <div class="wof-tag">Double Winner</div>
-        <div class="wof-info">
-          <div class="wof-title">Ninety's Jam</div>
-          <div class="wof-sub">1v1 &amp; 2v2 Hip-Hop</div>
-        </div>
-      </a>
-    </div>
-  </section>
-
-  <div class="kinetic"><div class="kinetic-track" id="kinetic2">RECEIPTS <span>RECEIPTS</span> RECEIPTS <span>RECEIPTS</span> RECEIPTS <span>RECEIPTS</span></div></div>
-
-  <section id="watch">
-    <div class="eyebrow reveal">Watch</div>
-    <h2 class="sec-title anton reveal">On The Floor</h2>
-    <div class="watch-grid">
-      <a class="reel-card reveal-scale" href="https://www.instagram.com/reel/DaGFWpeyp89/" target="_blank" rel="noopener">
-        <div class="reel-thumb">
-          <img class="reel-cover" src="reel-cover-1.jpg" alt="Priyansh performing on the battle floor, crowd surrounding">
-          <div class="rec-badge"><span class="dot"></span>REC</div>
-          <span class="reel-tag">Viral Clip</span>
-          <div class="ring2"></div>
-          <div class="reel-play"></div>
-        </div>
-        <div class="reel-body">
-          <div class="reel-caption">Battle floor, crowd going off — hip-hop freestyle round.</div>
-          <div class="reel-meta"><span class="reel-likes">49.9K+</span><span>likes</span></div>
-          <div class="reel-cta">Watch on Instagram ↗</div>
-        </div>
-      </a>
-      <a class="reel-card reveal-scale" href="https://www.instagram.com/reel/DZ5EE_4SugM/" target="_blank" rel="noopener">
-        <div class="reel-thumb">
-          <img class="reel-cover" src="reel-cover-2.jpg" alt="Priyansh in a TellaX battle round on stage">
-          <div class="rec-badge"><span class="dot"></span>REC</div>
-          <span class="reel-tag">#LDDLM Battle</span>
-          <div class="ring2"></div>
-          <div class="reel-play"></div>
-        </div>
-        <div class="reel-body">
-          <div class="reel-caption">TellaX battle round — freestyle to "Squideliciouz Bounce."</div>
-          <div class="reel-meta"><span class="reel-likes">1.7K+</span><span>likes</span></div>
-          <div class="reel-cta">Watch on Instagram ↗</div>
-        </div>
-      </a>
-    </div>
-    <div class="reel-embed-row">
-      <div class="reel-embed reveal-scale">
-        <span class="reel-tag">Red Bull Final</span>
-        <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DW0vLDwgS4T/" data-instgrm-version="14" style="width:100%;"></blockquote>
-      </div>
-    </div>
-  </section>
-
-  <section>
-    <div class="eyebrow reveal">Focus</div>
-    <h2 class="sec-title anton reveal">What I Bring</h2>
-    <div class="strip">
-      <span class="chip reveal">Freestyle</span>
-      <span class="chip reveal">1-on-1 Battles</span>
-      <span class="chip reveal">Hip-Hop</span>
-      <span class="chip reveal">Street Style</span>
-      <span class="chip reveal">Character Work</span>
-      <span class="chip reveal">Crew: <a class="patch-lddlm" href="https://www.instagram.com/lddlmofficiel/" target="_blank" rel="noopener">LDDLM</a></span>
-    </div>
-  </section>
-
-  <section>
-    <div class="eyebrow reveal">Crowd Reaction</div>
-    <h2 class="sec-title anton reveal">Straight From The Floor</h2>
-    <div class="quotes">
-      <div class="quote reveal">"The beast."<div class="who">— <a class="ig-tag" href="https://www.instagram.com/stalamuerte_stylezc/" target="_blank" rel="noopener">@stalamuerte_stylezc</a>, Los Diablos De La Muerte</div></div>
-      <div class="quote reveal">"Why isn't the crowd hyped? That was insane 🔥🔥🔥"<div class="who">— Battle audience comment</div></div>
-      <div class="quote reveal">"Killed it 🔥"<div class="who">— Battle audience comment</div></div>
-    </div>
-  </section>
-
-  <div id="connect" class="connect reveal-scale">
-    <h2 class="anton">Let's <span class="accent">Connect</span></h2>
-    <p>For battles, bookings, or collabs — hit me up on Instagram.</p>
-    <a class="btn btn-primary" href="https://www.instagram.com/priyansh3604/" target="_blank" rel="noopener">@priyansh3604 ↗</a>
-  </div>
-
-  <footer>Priyansh Shrivastava — Portfolio</footer>
-</div>
-
-<script>
-  // ---------- PAGE LOADER ----------
-  (function(){
-    const loader = document.getElementById('pageLoader');
-    const pct = document.getElementById('loaderPct');
-    const fill = document.getElementById('loaderBarFill');
-    if (!loader) return;
-    if (sessionStorage.getItem('priyanshLoaded')) {
-      loader.classList.add('done');
-      return;
+function useScrollFX(kineticRefsArr) {
+  const progressRef = useRef(null);
+  const hudBarRef = useRef(null);
+  const hudScrollRef = useRef(null);
+  const hudClockRef = useRef(null);
+  useEffect(() => {
+    function updateProgress() {
+      const h = document.documentElement;
+      const scrolled = h.scrollHeight > h.clientHeight ? (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100 : 0;
+      if (progressRef.current) progressRef.current.style.width = scrolled + '%';
+      if (hudScrollRef.current) hudScrollRef.current.textContent = scrolled.toFixed(0) + '%';
+      if (hudBarRef.current) hudBarRef.current.classList.toggle('translate-y-0', h.scrollTop > window.innerHeight * 0.6);
+      if (hudBarRef.current) hudBarRef.current.classList.toggle('translate-y-full', !(h.scrollTop > window.innerHeight * 0.6));
+      kineticRefsArr.forEach((r, i) => {
+        const el = r.current;
+        if (!el) return;
+        const dir = i % 2 === 0 ? -1 : 1;
+        const offset = (h.scrollTop * 0.12 * dir) % 600;
+        el.style.transform = 'translateX(' + offset + 'px)';
+      });
     }
-    let n = 0;
-    const step = () => {
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    updateProgress();
+    function updateClock() {
+      if (!hudClockRef.current) return;
+      const istMillis = Date.now() + 5.5 * 60 * 60000;
+      hudClockRef.current.textContent = new Date(istMillis).toISOString().substr(11, 8);
+    }
+    updateClock();
+    const clockInt = setInterval(updateClock, 1000);
+    return () => { window.removeEventListener('scroll', updateProgress); clearInterval(clockInt); };
+  }, []);
+  return { progressRef, hudBarRef, hudScrollRef, hudClockRef };
+}
+
+/* ---------------- SHARED COMPONENTS ---------------- */
+
+const Reveal = React.forwardRef(function Reveal({ variant = 'reveal', delay = 0, className = '', as: Tag = 'div', children, ...rest }, forwardedRef) {
+  const localRef = useRef(null);
+  const [inView, setInView] = useState(false);
+  useEffect(() => {
+    const el = localRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) { setInView(true); obs.unobserve(entry.target); }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+  const setRefs = (node) => {
+    localRef.current = node;
+    if (typeof forwardedRef === 'function') forwardedRef(node);
+    else if (forwardedRef) forwardedRef.current = node;
+  };
+  return (
+    <Tag ref={setRefs} className={`${variant} ${inView ? 'in' : ''} ${className}`} style={{ transitionDelay: delay + 'ms' }} {...rest}>
+      {children}
+    </Tag>
+  );
+});
+
+const Magnetic = React.forwardRef(function Magnetic({ as: Tag = 'a', className = '', children, ...rest }, forwardedRef) {
+  const localRef = useRef(null);
+  const setRefs = (node) => {
+    localRef.current = node;
+    if (typeof forwardedRef === 'function') forwardedRef(node);
+    else if (forwardedRef) forwardedRef.current = node;
+  };
+  const onMove = (e) => {
+    const el = localRef.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    const dx = (e.clientX - r.left - r.width / 2) * 0.28;
+    const dy = (e.clientY - r.top - r.height / 2) * 0.35;
+    el.style.transform = `translate(${dx}px, ${dy}px)`;
+  };
+  const onLeave = () => { if (localRef.current) localRef.current.style.transform = ''; };
+  return (
+    <Tag ref={setRefs} className={`transition-transform duration-150 ${className}`} onMouseMove={onMove} onMouseLeave={onLeave} {...rest}>
+      {children}
+    </Tag>
+  );
+});
+
+const LddlmPatch = (props) => (
+  <Magnetic as="a" href="https://www.instagram.com/lddlmofficiel/" target="_blank" rel="noopener"
+    className="inline-flex items-center bg-black border border-[#2b2b2b] px-2.5 py-0.5 rounded font-sans font-extrabold text-[0.82em] tracking-wide text-white no-underline align-[1px] hover:border-fire hover:shadow-[0_0_0_1px_rgba(138,28,28,0.25)]">
+    LDDLM
+  </Magnetic>
+);
+
+function CornerMarks() {
+  const base = "fixed w-1.5 h-1.5 bg-fire2 z-[60] opacity-75 pointer-events-none animate-markPulse hidden sm:block";
+  return (
+    <>
+      <div className={base + " top-5 left-5"}></div>
+      <div className={base + " top-5 right-5 corner-mark tr"}></div>
+      <div className={base + " bottom-5 left-5 corner-mark bl"}></div>
+      <div className={base + " bottom-5 right-5 corner-mark br"}></div>
+    </>
+  );
+}
+
+function PageLoader() {
+  const [pct, setPct] = useState(0);
+  const [done, setDone] = useState(false);
+  useEffect(() => {
+    let n = 0, t;
+    function step() {
       n += Math.random() * 18 + 6;
       if (n >= 100) n = 100;
-      pct.textContent = Math.floor(n) + '%';
-      fill.style.width = n + '%';
-      if (n < 100) {
-        setTimeout(step, 90 + Math.random() * 70);
-      } else {
-        setTimeout(() => {
-          loader.classList.add('done');
-          sessionStorage.setItem('priyanshLoaded', '1');
-        }, 250);
-      }
-    };
-    step();
-  })();
-
-  // ---------- CUSTOM CURSOR (desktop only) ----------
-  if (window.matchMedia('(pointer:fine)').matches) {
-    document.body.classList.add('has-cursor');
-    const dot = document.createElement('div'); dot.className = 'cursor-dot';
-    const ring = document.createElement('div'); ring.className = 'cursor-ring';
-    document.body.append(dot, ring);
-    let tx = 0, ty = 0, rx = 0, ry = 0;
-    window.addEventListener('mousemove', (e) => {
-      tx = e.clientX; ty = e.clientY;
-      dot.style.left = tx + 'px'; dot.style.top = ty + 'px';
-    });
-    (function loop(){
-      rx += (tx - rx) * 0.18; ry += (ty - ry) * 0.18;
-      ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
-      requestAnimationFrame(loop);
-    })();
-    document.querySelectorAll('a, button, .wof-card, .reel-card, .chip').forEach((el) => {
-      el.addEventListener('mouseenter', () => ring.classList.add('big'));
-      el.addEventListener('mouseleave', () => ring.classList.remove('big'));
-    });
-  }
-
-  // ---------- SCROLL PROGRESS BAR + HUD + KINETIC DRIFT ----------
-  const progressBar = document.getElementById('scrollProgress');
-  const hudBar = document.getElementById('hudBar');
-  const hudScroll = document.getElementById('hudScroll');
-  const kineticEls = document.querySelectorAll('.kinetic-track');
-  function updateProgress(){
-    const h = document.documentElement;
-    const scrolled = h.scrollHeight > h.clientHeight ? (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100 : 0;
-    if (progressBar) progressBar.style.width = scrolled + '%';
-    if (hudScroll) hudScroll.textContent = scrolled.toFixed(0) + '%';
-    if (hudBar) hudBar.classList.toggle('show', h.scrollTop > window.innerHeight * 0.6);
-    kineticEls.forEach((el, i) => {
-      const dir = i % 2 === 0 ? -1 : 1;
-      const offset = (h.scrollTop * 0.12 * dir) % 600;
-      el.style.transform = 'translateX(' + offset + 'px)';
-    });
-  }
-  window.addEventListener('scroll', updateProgress, { passive: true });
-  updateProgress();
-
-  // ---------- LIVE CLOCK (IST) ----------
-  const hudClock = document.getElementById('hudClock');
-  function updateClock(){
-    if (!hudClock) return;
-    const istMillis = Date.now() + 5.5 * 60 * 60000; // epoch ms is already UTC; shift +5:30 for IST
-    hudClock.textContent = new Date(istMillis).toISOString().substr(11, 8);
-  }
-  updateClock();
-  setInterval(updateClock, 1000);
-
-  // ---------- NAV ACTIVE-SECTION HIGHLIGHT + HUD SECTION LABEL ----------
-  const navLinks = document.querySelectorAll('nav .links a');
-  const sectionMap = {};
-  const sectionLabels = { about: 'ABOUT', journey: 'JOURNEY', watch: 'WATCH', achievements: 'ACHIEVEMENTS', connect: 'CONNECT' };
-  const hudSection = document.getElementById('hudSection');
-  navLinks.forEach((link) => {
-    const id = link.getAttribute('href').slice(1);
-    const sec = document.getElementById(id);
-    if (sec) sectionMap[id] = link;
-  });
-  const navObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      const link = sectionMap[entry.target.id];
-      if (!link) return;
-      if (entry.isIntersecting) {
-        navLinks.forEach((l) => l.classList.remove('active'));
-        link.classList.add('active');
-        if (hudSection && sectionLabels[entry.target.id]) hudSection.textContent = sectionLabels[entry.target.id];
-      }
-    });
-  }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
-  Object.keys(sectionMap).forEach((id) => navObserver.observe(document.getElementById(id)));
-
-  // ---------- REVEAL ON SCROLL (with stagger) ----------
-  function stagger(selector, base = 80) {
-    document.querySelectorAll(selector).forEach((group) => {
-      [...group.children].forEach((child, i) => {
-        if (child.classList.contains('reveal') || child.classList.contains('reveal-scale') || child.classList.contains('reveal-left')) {
-          child.style.transitionDelay = (i * base) + 'ms';
-        }
-      });
-    });
-  }
-  stagger('.ach-list', 70);
-  stagger('.wof-grid', 100);
-  stagger('.watch-grid', 100);
-  stagger('.strip', 60);
-  stagger('.quotes', 90);
-  stagger('.timeline', 90);
-
-  const revealEls = document.querySelectorAll('.reveal, .reveal-scale, .reveal-left');
-  const revealObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('in');
-        revealObserver.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
-  revealEls.forEach((el) => revealObserver.observe(el));
-
-  // Timeline draw-in line
-  const timelineEl = document.querySelector('.timeline');
-  if (timelineEl) {
-    const tlObserver = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('in');
-          tlObserver.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.1 });
-    tlObserver.observe(timelineEl);
-  }
-
-  // ---------- ANIMATED STAT COUNTERS ----------
-  function animateCount(el) {
-    const target = parseFloat(el.dataset.target);
-    const decimals = parseInt(el.dataset.decimals || '0', 10);
-    const dur = 1400;
-    let start = null;
-    function step(ts) {
-      if (!start) start = ts;
-      const progress = Math.min((ts - start) / dur, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      const val = target * eased;
-      el.textContent = decimals > 0 ? val.toFixed(decimals) : Math.round(val);
-      if (progress < 1) requestAnimationFrame(step);
+      setPct(Math.floor(n));
+      if (n < 100) { t = setTimeout(step, 90 + Math.random() * 70); }
+      else { t = setTimeout(() => setDone(true), 250); }
     }
-    requestAnimationFrame(step);
-  }
-  const statsEl = document.querySelector('.stats');
-  if (statsEl) {
-    const statsObserver = new IntersectionObserver((entries) => {
+    step();
+    return () => clearTimeout(t);
+  }, []);
+  return (
+    <div className={`fixed inset-0 z-[3000] bg-bg flex items-center justify-center flex-col gap-3.5 transition-all duration-500 ${done ? 'opacity-0 invisible pointer-events-none' : ''}`}>
+      <div className="font-anton text-[15px] tracking-[4px] text-fire2">{pct}%</div>
+      <div className="w-[180px] h-0.5 bg-line overflow-hidden">
+        <div className="h-full bg-fire2 shadow-[0_0_8px_rgba(214,69,69,0.7)]" style={{ width: pct + '%' }}></div>
+      </div>
+    </div>
+  );
+}
+
+function CustomCursor() {
+  const dotRef = useRef(null);
+  const ringRef = useRef(null);
+  useEffect(() => {
+    if (!window.matchMedia('(pointer:fine)').matches) return;
+    document.body.classList.add('has-cursor');
+    let tx = 0, ty = 0, rx = 0, ry = 0, raf;
+    function onMove(e) {
+      tx = e.clientX; ty = e.clientY;
+      if (dotRef.current) { dotRef.current.style.left = tx + 'px'; dotRef.current.style.top = ty + 'px'; }
+    }
+    window.addEventListener('mousemove', onMove);
+    function loop() {
+      rx += (tx - rx) * 0.18; ry += (ty - ry) * 0.18;
+      if (ringRef.current) { ringRef.current.style.left = rx + 'px'; ringRef.current.style.top = ry + 'px'; }
+      raf = requestAnimationFrame(loop);
+    }
+    loop();
+    function onOver(e) {
+      if (e.target.closest && e.target.closest('a, button, .wof-card, .reel-card, .chip')) {
+        if (ringRef.current) { ringRef.current.classList.add('w-14', 'h-14'); ringRef.current.classList.remove('w-8', 'h-8'); }
+      }
+    }
+    function onOut(e) {
+      if (e.target.closest && e.target.closest('a, button, .wof-card, .reel-card, .chip')) {
+        if (ringRef.current) { ringRef.current.classList.remove('w-14', 'h-14'); ringRef.current.classList.add('w-8', 'h-8'); }
+      }
+    }
+    document.addEventListener('mouseover', onOver);
+    document.addEventListener('mouseout', onOut);
+    return () => {
+      window.removeEventListener('mousemove', onMove);
+      document.removeEventListener('mouseover', onOver);
+      document.removeEventListener('mouseout', onOut);
+      cancelAnimationFrame(raf);
+      document.body.classList.remove('has-cursor');
+    };
+  }, []);
+  return (
+    <>
+      <div ref={dotRef} className="cursor-dot fixed top-0 left-0 w-[7px] h-[7px] rounded-full bg-fire2 pointer-events-none z-[1500] -translate-x-1/2 -translate-y-1/2 opacity-0 transition-opacity duration-300"></div>
+      <div ref={ringRef} className="cursor-ring fixed top-0 left-0 w-8 h-8 rounded-full border border-fire2/55 pointer-events-none z-[1500] -translate-x-1/2 -translate-y-1/2 opacity-0 transition-all duration-300"></div>
+    </>
+  );
+}
+
+function Nav({ activeId }) {
+  return (
+    <nav className="fixed top-0 left-0 right-0 z-50 flex justify-between items-center px-8 py-5 backdrop-blur-md bg-black/55 border-b border-line">
+      <div className="font-anton tracking-wide text-base">PRIYANSH<span className="text-fire">.</span></div>
+      <div className="hidden sm:flex gap-6 items-center">
+        {NAV_LINKS.map((l) => (
+          <a key={l.id} href={'#' + l.id}
+            className={`relative text-[12px] tracking-[1.5px] uppercase pb-1 transition-colors hover:text-fire ${activeId === l.id ? 'text-fire2 active' : 'text-muted'}`}>
+            {l.label}
+          </a>
+        ))}
+      </div>
+      <Magnetic as="a" href="https://www.instagram.com/priyansh3604/" target="_blank" rel="noopener"
+        className="text-ink border border-line px-4 py-2 rounded-full hover:border-fire hover:text-fire2 text-[13px]">
+        Instagram ↗
+      </Magnetic>
+    </nav>
+  );
+}
+
+function Marquee() {
+  const words = ['TOP DANCER', 'LDDLM CREW', 'HIP-HOP', 'FREESTYLE BATTLES'];
+  const track = [...words, ...words];
+  return (
+    <div className="border-t border-b border-line overflow-hidden whitespace-nowrap py-3.5 mt-[70px] bg-bg2">
+      <div className="inline-block pl-[100%] animate-marquee">
+        {track.map((w, i) => (
+          <span key={i} className={`font-anton text-sm tracking-[3px] mr-10 uppercase ${i % 2 === 0 ? 'text-fire' : 'text-muted'}`}>{w}</span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function StatsBar() {
+  const containerRef = useRef(null);
+  const numRefs = useRef([]);
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          entry.target.querySelectorAll('.count-num').forEach(animateCount);
-          statsObserver.unobserve(entry.target);
+          STATS.forEach((s, i) => {
+            const node = numRefs.current[i];
+            if (!node) return;
+            const dur = 1400; let start = null;
+            function step(ts) {
+              if (!start) start = ts;
+              const progress = Math.min((ts - start) / dur, 1);
+              const eased = 1 - Math.pow(1 - progress, 3);
+              const val = s.target * eased;
+              node.textContent = s.decimals > 0 ? val.toFixed(s.decimals) : Math.round(val);
+              if (progress < 1) requestAnimationFrame(step);
+            }
+            requestAnimationFrame(step);
+          });
+          obs.unobserve(entry.target);
         }
       });
     }, { threshold: 0.4 });
-    statsObserver.observe(statsEl);
-  }
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+  return (
+    <div ref={containerRef} className="grid grid-cols-1 sm:grid-cols-3 border border-line rounded-[10px] overflow-hidden mt-14">
+      {STATS.map((s, i) => (
+        <div key={s.label} className="p-6 text-center border-b sm:border-b-0 sm:border-r border-line last:border-none">
+          <div className="font-anton text-[clamp(24px,4vw,34px)] text-fire2">
+            <span ref={(el) => (numRefs.current[i] = el)}>0</span><span className="text-sm text-muted font-sans">{s.unit}</span>
+          </div>
+          <div className="mt-1.5 text-[11px] tracking-[2px] uppercase text-muted">{s.label}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
 
-  // ---------- MAGNETIC BUTTONS ----------
-  if (window.matchMedia('(pointer:fine)').matches) {
-    document.querySelectorAll('.btn, .patch-lddlm, nav .ig').forEach((el) => {
-      el.style.transition = 'transform .18s cubic-bezier(.2,.7,.3,1)';
-      el.addEventListener('mousemove', (e) => {
-        const r = el.getBoundingClientRect();
-        const dx = (e.clientX - r.left - r.width / 2) * 0.28;
-        const dy = (e.clientY - r.top - r.height / 2) * 0.35;
-        el.style.transform = `translate(${dx}px, ${dy}px)`;
-      });
-      el.addEventListener('mouseleave', () => { el.style.transform = ''; });
-    });
-  }
-
-  // ---------- REEL CARD 3D TILT ----------
-  if (window.matchMedia('(pointer:fine)').matches) {
-    document.querySelectorAll('.reel-card').forEach((card, idx) => {
-      const baseRotate = idx % 2 === 0 ? -1.2 : 1.2;
-      card.addEventListener('mousemove', (e) => {
-        const r = card.getBoundingClientRect();
-        const px = (e.clientX - r.left) / r.width - 0.5;
-        const py = (e.clientY - r.top) / r.height - 0.5;
-        card.style.transform = `perspective(700px) rotateX(${(-py * 14).toFixed(2)}deg) rotateY(${(px * 16 + baseRotate).toFixed(2)}deg) scale(1.035)`;
-      });
-      card.addEventListener('mouseleave', () => {
-        card.style.transform = `rotate(${baseRotate}deg)`;
-      });
-    });
-  }
-
-  // ---------- INSTAGRAM EMBED PROCESS (re-run in case script loaded early) ----------
-  window.addEventListener('load', () => {
-    if (window.instgrm) window.instgrm.Embeds.process();
-  });
-
-  // ---------- Mouse-parallax for the floating hero decor ----------
-  const heroStage = document.getElementById('heroStage');
-  const floaters = document.querySelectorAll('.floater');
-  if (heroStage && window.matchMedia('(min-width:761px)').matches) {
-    heroStage.addEventListener('mousemove', (e) => {
-      const rect = heroStage.getBoundingClientRect();
+function Hero() {
+  const stageRef = useRef(null);
+  const floaterRefs = useRef([]);
+  useEffect(() => {
+    const stage = stageRef.current;
+    if (!stage || !window.matchMedia('(min-width:761px)').matches) return;
+    function onMove(e) {
+      const rect = stage.getBoundingClientRect();
       const cx = rect.width / 2, cy = rect.height / 2;
       const dx = (e.clientX - rect.left - cx) / cx;
       const dy = (e.clientY - rect.top - cy) / cy;
-      floaters.forEach((f) => {
-        const depth = parseFloat(f.dataset.depth) || 0.5;
+      floaterRefs.current.forEach((f, i) => {
+        if (!f) return;
+        const depth = FLOATERS[i].depth;
         f.style.setProperty('--px', (dx * 34 * depth) + 'px');
         f.style.setProperty('--py', (dy * 34 * depth) + 'px');
       });
-    });
-    heroStage.addEventListener('mouseleave', () => {
-      floaters.forEach((f) => {
-        f.style.setProperty('--px', '0px');
-        f.style.setProperty('--py', '0px');
-      });
-    });
-  }
+    }
+    function onLeave() {
+      floaterRefs.current.forEach((f) => { if (f) { f.style.setProperty('--px', '0px'); f.style.setProperty('--py', '0px'); } });
+    }
+    stage.addEventListener('mousemove', onMove);
+    stage.addEventListener('mouseleave', onLeave);
+    return () => { stage.removeEventListener('mousemove', onMove); stage.removeEventListener('mouseleave', onLeave); };
+  }, []);
+
+  return (
+    <div ref={stageRef} className="min-h-[92vh] flex flex-col justify-center pt-[70px] pb-16 relative overflow-hidden">
+      <div className="hero-bg absolute inset-0 z-0 overflow-hidden">
+        <img src="gallery-2.jpg" alt="" className="absolute inset-0 w-full h-full object-cover opacity-0 grayscale contrast-125 brightness-[0.55] animate-heroSlide" />
+        <img src="wof-redbull-westzone.jpg" alt="" className="absolute inset-0 w-full h-full object-cover opacity-0 grayscale contrast-125 brightness-[0.55] animate-heroSlide" />
+        <img src="gallery-4.jpg" alt="" className="absolute inset-0 w-full h-full object-cover opacity-0 grayscale contrast-125 brightness-[0.55] animate-heroSlide" />
+        <img src="gallery-3.jpg" alt="" className="absolute inset-0 w-full h-full object-cover opacity-0 grayscale contrast-125 brightness-[0.55] animate-heroSlide" />
+      </div>
+      <div className="absolute top-[10%] right-[-10%] w-[520px] h-[520px] rounded-full pointer-events-none z-0 animate-pulseGlow"
+        style={{ background: 'radial-gradient(circle,rgba(138,28,28,0.14),transparent 65%)', filter: 'blur(24px)' }}></div>
+
+      <div className="absolute inset-0 z-[1] pointer-events-none">
+        {FLOATERS.map((f, i) => (
+          <div key={i} ref={(el) => (floaterRefs.current[i] = el)}
+            className={`floater absolute flex items-center justify-center rounded-full bg-[#141110] border border-fire/30 shadow-[5px_5px_0_rgba(0,0,0,0.4)] animate-floatY saturate-75 ${f.cls}`}
+            style={{ animationDelay: f.delay }}>
+            <span className="[filter:drop-shadow(0_2px_4px_rgba(0,0,0,0.5))_saturate(0.7)_sepia(0.15)]">{f.icon}</span>
+          </div>
+        ))}
+      </div>
+
+      <div className="relative z-[2] grid grid-cols-1 md:grid-cols-[1.25fr_.75fr] gap-12 items-center">
+        <div className="text-center md:text-left">
+          <span className="tag inline-flex items-center gap-2 text-[11px] tracking-[3px] uppercase text-fire border border-fire/40 px-4 py-1.5 rounded-full mb-7 w-fit mx-auto md:mx-0 opacity-0 animate-fadeUp">
+            <span className="w-1.5 h-1.5 bg-fire rounded-full shadow-[0_0_8px_#8a1c1c]"></span>Hip-Hop / Freestyle Battle Circuit · India
+          </span>
+          <h1 className="font-anton uppercase text-[clamp(44px,6.4vw,88px)] leading-[1.08] tracking-wide opacity-0 animate-fadeUp break-words" style={{ animationDelay: '.1s' }}>
+            Priyansh<br />Shriva<span className="text-fire">stava</span>
+          </h1>
+          <p className="role-line mt-6 text-lg text-muted max-w-[560px] leading-relaxed opacity-0 animate-fadeUp mx-auto md:mx-0" style={{ animationDelay: '.25s' }}>
+            <strong className="text-ink font-semibold">I'm a Hip-Hop Dancer</strong> — Battle Competitor repping <LddlmPatch />. Raw energy, sharp character work, and a growing list of titles across India's battle scene.
+          </p>
+          <div className="cta-row mt-9 flex gap-3.5 flex-wrap items-center justify-center md:justify-start opacity-0 animate-fadeUp" style={{ animationDelay: '.4s' }}>
+            <Magnetic as="a" href="#journey" className="inline-flex items-center gap-2 px-7 py-4 text-xs tracking-[1.5px] uppercase font-bold bg-fire text-ink border border-[#d8cfc2] shadow-[4px_4px_0_rgba(0,0,0,0.5)] hover:shadow-[6px_6px_0_rgba(0,0,0,0.5)] hover:-translate-y-0.5 hover:-translate-x-0.5">
+              Follow the Journey
+            </Magnetic>
+            <Magnetic as="a" href="#achievements" className="inline-flex items-center gap-2 px-7 py-4 text-xs tracking-[1.5px] uppercase font-bold border border-line text-ink hover:border-fire hover:text-fire2">
+              See Achievements
+            </Magnetic>
+          </div>
+          <div className="crew-credit mt-6 flex items-center gap-2.5 text-xs text-muted opacity-0 animate-fadeUp justify-center md:justify-start" style={{ animationDelay: '.5s' }}>
+            <img src="lddlm-badge.png" alt="LDDLM crew emblem" className="h-[34px] w-auto rounded border border-line shadow-[2px_2px_0_rgba(0,0,0,0.5)]" />
+            <LddlmPatch /> <span>· 16.7k followers · "Welcome to LDDLM"</span>
+          </div>
+          <StatsBar />
+        </div>
+
+        <div className="avatar-stage relative flex items-center justify-center min-h-[420px] opacity-0 animate-fadeUp order-first md:order-none" style={{ animationDelay: '.15s' }}>
+          <div className="absolute w-[380px] h-[380px] rounded-full z-0" style={{ background: 'radial-gradient(circle,rgba(138,28,28,0.18),transparent 70%)', filter: 'blur(30px)' }}></div>
+          <div className="avatar-frame relative z-[1] w-[300px] h-[380px] rounded-md border border-[#3a322c] shadow-[8px_8px_0_rgba(0,0,0,0.5)] flex items-center justify-center overflow-hidden" style={{ background: 'linear-gradient(160deg,#161310,#0a0806)' }}>
+            <img src="priyansh-hero.jpg" alt="Priyansh Shrivastava" className="w-full h-full object-cover [filter:grayscale(70%)_contrast(1.05)_brightness(0.88)_sepia(0.25)]" />
+            <div className="tint absolute inset-0 pointer-events-none"></div>
+            <div className="tint2 absolute inset-0 pointer-events-none"></div>
+          </div>
+          <div className="absolute z-[2] -bottom-4 left-1/2 -translate-x-1/2 bg-fire text-ink text-[11px] font-bold tracking-[1.5px] uppercase px-4.5 py-2 border border-[#3a322c] shadow-[3px_3px_0_rgba(0,0,0,0.5)] whitespace-nowrap">
+            Hip-Hop · Freestyle
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function GalleryStrip() {
+  return (
+    <>
+      <section id="gallery" className="pb-0 pt-20">
+        <Reveal as="div" className="text-[11px] tracking-[4px] uppercase text-fire mb-3.5">Live From The Floor</Reveal>
+        <Reveal as="h2" className="font-anton uppercase text-[clamp(28px,5vw,46px)] tracking-wide mb-5">On Stage</Reveal>
+      </section>
+      <div className="gallery-strip full-bleed overflow-hidden mt-6 border-t border-b border-line py-6">
+        <div className="flex gap-5 w-max animate-gscroll hover:[animation-play-state:paused]">
+          {GALLERY.map((g, i) => (
+            <div key={i} className="gallery-item relative w-[250px] sm:w-[320px] aspect-[3/2] rounded overflow-hidden border border-line shadow-[6px_6px_0_rgba(0,0,0,0.5)] flex-none transition-transform hover:-translate-x-1 hover:-translate-y-1 group">
+              <img src={g.img} alt={g.alt} className="w-full h-full object-cover grayscale contrast-125 brightness-90 transition-all duration-300 group-hover:grayscale-[0.25] group-hover:contrast-110 group-hover:sepia-[0.12] group-hover:scale-105" />
+              <div className="absolute left-0 right-0 bottom-0 px-4 pb-3.5 pt-3 z-[2]">
+                <div className="font-anton text-[13px] tracking-wide uppercase leading-tight">{g.t}</div>
+                <div className="mt-0.5 text-[10.5px] tracking-wide uppercase text-fire2">{g.s}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </>
+  );
+}
+
+function AboutSection() {
+  return (
+    <section id="about" className="py-20 border-t border-line">
+      <Reveal as="div" className="text-[11px] tracking-[4px] uppercase text-fire mb-3.5">About</Reveal>
+      <Reveal as="h2" className="font-anton uppercase text-[clamp(28px,5vw,46px)] tracking-wide mb-5">The Story</Reveal>
+      <Reveal as="p" className="text-lg leading-[1.75] text-[#c9c9c9] max-w-[640px]">
+        I'm a freestyle hip-hop dancer competing and performing within India's hip-hop battle circuit. Known for raw energy and character-driven freestyle, I battle, train, and perform under the <a className="text-fire2 border-b border-fire2/35 hover:text-ink hover:border-ink" href="https://www.instagram.com/lddlmofficiel/" target="_blank" rel="noopener">LDDLM</a> banner — a Paris underground crew with real international pedigree, the same lineage that produced Diablo and StalaMuerte of Los Diablos De La Muerte. I bring that same street style and stage presence to every floor I step on.
+      </Reveal>
+    </section>
+  );
+}
+
+function JourneyTimeline() {
+  const localRef = useRef(null);
+  const [lineIn, setLineIn] = useState(false);
+  useEffect(() => {
+    const el = localRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => { if (entry.isIntersecting) { setLineIn(true); obs.unobserve(entry.target); } });
+    }, { threshold: 0.1 });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+  return (
+    <section id="journey" className="py-20 border-t border-line">
+      <Reveal as="div" className="text-[11px] tracking-[4px] uppercase text-fire mb-3.5">The Journey</Reveal>
+      <Reveal as="h2" className="font-anton uppercase text-[clamp(28px,5vw,46px)] tracking-wide mb-5">Four Years In</Reveal>
+      <div ref={localRef} className={`timeline relative mt-8 pl-8 ${lineIn ? 'in' : ''}`}>
+        {TIMELINE.map((t, i) => (
+          <Reveal key={t.year} as="div" variant="reveal-left" delay={i * 90} className="tl-item relative pb-9 last:pb-0">
+            <div className="tl-dot absolute -left-[30px] top-1 w-3 h-3 rounded-full bg-fire border-2 border-bg shadow-[0_0_0_2px_#2a2422] transition-shadow"></div>
+            <div className="font-anton text-xs tracking-[2.5px] uppercase text-fire2 mb-1.5">{t.year}</div>
+            <div className="font-anton text-xl uppercase tracking-wide mb-1.5">{t.title}</div>
+            <div className="text-sm text-muted leading-[1.65] max-w-[540px]">
+              {t.crew ? <>That run is what brought me into <LddlmPatch /> — the crew I rep to this day.</> : t.desc}
+            </div>
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+const KineticDivider = React.forwardRef(function KineticDivider({ text }, ref) {
+  return (
+    <div className="overflow-hidden whitespace-nowrap border-t border-b border-line py-1.5">
+      <div ref={ref} className="kinetic-track inline-block font-anton text-[clamp(70px,13vw,160px)] tracking-[2px] uppercase text-transparent will-change-transform">
+        {text} <span className="mr-[.35em]">{text}</span> {text} <span className="mr-[.35em]">{text}</span> {text} <span className="mr-[.35em]">{text}</span>
+      </div>
+    </div>
+  );
+});
+
+function AchievementsSection() {
+  return (
+    <section id="achievements" className="py-20 border-t border-line">
+      <Reveal as="div" className="text-[11px] tracking-[4px] uppercase text-fire mb-3.5">Selected Achievements</Reveal>
+      <Reveal as="h2" className="font-anton uppercase text-[clamp(28px,5vw,46px)] tracking-wide mb-5">On The Board</Reveal>
+      <div className="border border-line rounded-[10px] overflow-hidden">
+        {ACHIEVEMENTS.map((a, i) => (
+          <Reveal key={a.title} as="div" delay={i * 70} className="flex items-center gap-5 px-6 py-5 border-b border-line last:border-none hover:bg-bg2 group">
+            <div className="font-anton text-3xl text-line min-w-[50px] group-hover:text-fire transition-colors">{String(i + 1).padStart(2, '0')}</div>
+            <div className="flex-1">
+              <div className="font-anton text-[19px] tracking-wide uppercase text-fire2">{a.title}</div>
+              <div className="mt-1 text-[13.5px] text-muted leading-normal">
+                {a.judge ? <>Judged by <a className="text-fire2 border-b border-fire2/35 hover:text-ink hover:border-ink" href={`https://www.instagram.com/${a.judge}/`} target="_blank" rel="noopener">@{a.judge}</a></> : a.desc}
+              </div>
+            </div>
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function WallOfFame() {
+  return (
+    <section id="wall-of-fame" className="py-20 border-t border-line">
+      <Reveal as="div" className="text-[11px] tracking-[4px] uppercase text-fire mb-3.5">The Proof</Reveal>
+      <Reveal as="h2" className="font-anton uppercase text-[clamp(28px,5vw,46px)] tracking-wide mb-5">Wall Of Fame</Reveal>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-2.5">
+        {WALL_OF_FAME.map((w, i) => (
+          <Reveal key={w.href} as="a" variant="reveal-scale" delay={i * 100} href={w.href} target="_blank" rel="noopener"
+            className="wof-card relative block no-underline rounded overflow-hidden bg-bg2 border border-line shadow-[7px_7px_0_rgba(0,0,0,0.5)] transition-transform hover:-translate-x-1 hover:-translate-y-1 group">
+            <div className="wof-photo relative aspect-[3/4] overflow-hidden">
+              <img src={w.img} alt={w.alt} className="w-full h-full object-cover grayscale contrast-125 brightness-[0.92] transition-all duration-300 group-hover:grayscale-[0.35] group-hover:contrast-110 group-hover:sepia-[0.15] group-hover:scale-105" />
+            </div>
+            <div className="absolute top-3 left-3 z-[2] font-anton text-[11px] tracking-wide uppercase text-ink bg-fire px-2.5 py-1 shadow-[3px_3px_0_rgba(0,0,0,0.5)] -rotate-2">{w.tag}</div>
+            <div className="absolute left-0 right-0 bottom-0 z-[2] p-4">
+              <div className="font-anton text-[15px] tracking-wide uppercase leading-tight">{w.title}</div>
+              <div className="mt-1 text-[11px] tracking-wide uppercase text-muted group-hover:text-fire2">{w.sub}</div>
+            </div>
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function ReelCard({ reel, index }) {
+  const cardRef = useRef(null);
+  const baseRotate = index % 2 === 0 ? -1.2 : 1.2;
+  useEffect(() => {
+    const el = cardRef.current;
+    if (!el || !window.matchMedia('(pointer:fine)').matches) return;
+    function onMove(e) {
+      const r = el.getBoundingClientRect();
+      const px = (e.clientX - r.left) / r.width - 0.5;
+      const py = (e.clientY - r.top) / r.height - 0.5;
+      el.style.transform = `perspective(700px) rotateX(${(-py * 14).toFixed(2)}deg) rotateY(${(px * 16 + baseRotate).toFixed(2)}deg) scale(1.035)`;
+    }
+    function onLeave() { el.style.transform = `rotate(${baseRotate}deg)`; }
+    el.addEventListener('mousemove', onMove);
+    el.addEventListener('mouseleave', onLeave);
+    return () => { el.removeEventListener('mousemove', onMove); el.removeEventListener('mouseleave', onLeave); };
+  }, []);
+  return (
+    <Reveal ref={cardRef} as="a" variant="reveal-scale" delay={index * 100} href={reel.href} target="_blank" rel="noopener"
+      className="reel-card relative bg-bg2 border border-line rounded-md overflow-hidden shadow-[6px_6px_0_rgba(0,0,0,0.45)] flex flex-col no-underline hover:shadow-[12px_12px_0_rgba(0,0,0,0.5)]" style={{ transformStyle: 'preserve-3d', willChange: 'transform' }}>
+      <div className="reel-thumb relative aspect-[9/13] flex items-center justify-center border-b border-line overflow-hidden group" style={{ background: 'radial-gradient(circle at 50% 30%,rgba(156,43,33,0.25),transparent 60%), linear-gradient(160deg,#1a1512,#0a0806)' }}>
+        <img src={reel.img} alt={reel.alt} className="absolute inset-0 w-full h-full object-cover grayscale contrast-125 brightness-75 scale-[1.02] transition-all duration-300 group-hover:grayscale-[0.25] group-hover:contrast-115 group-hover:brightness-[0.85] group-hover:sepia-[0.1] group-hover:scale-110" />
+        <div className="absolute inset-0 z-[1] pointer-events-none" style={{ background: 'linear-gradient(180deg,rgba(0,0,0,0.15) 0%,rgba(0,0,0,0.1) 50%,rgba(0,0,0,0.75) 100%)' }}></div>
+        <div className="absolute top-3 right-3 z-[5] flex items-center gap-1.5 text-[9.5px] tracking-wide text-[#ff5050] bg-black/55 border border-[#ff5050]/40 px-2 py-1 rounded-sm">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#ff3030] animate-hudBlink shadow-[0_0_6px_#ff3030]"></span>REC
+        </div>
+        <span className="absolute top-3 left-3 z-[5] text-[10px] tracking-wide uppercase text-fire2 border border-fire/40 px-2.5 py-1 rounded-sm bg-black/55">{reel.tag}</span>
+        <div className="absolute w-[58px] h-[58px] rounded-full border border-fire2/40 z-[3] animate-ringPulse" style={{ animationDelay: '.7s' }}></div>
+        <div className="reel-play relative z-[4] w-[58px] h-[58px] rounded-full bg-black/55 border-2 border-fire2 flex items-center justify-center shadow-[0_0_24px_rgba(156,43,33,0.35)] transition-transform group-hover:scale-110">
+          <div className="absolute -inset-3.5 rounded-full border-[1.5px] border-fire2/55 animate-ringPulse"></div>
+        </div>
+      </div>
+      <div className="relative z-[2] px-4.5 pt-4 pb-4.5">
+        <div className="text-[13.5px] text-ink leading-[1.55]">{reel.caption}</div>
+        <div className="mt-3 flex justify-between items-center text-[11.5px] text-muted tracking-wide">
+          <span className="font-anton text-fire2 tracking-wide">{reel.likes}</span><span>likes</span>
+        </div>
+        <div className="mt-1.5 text-[10.5px] tracking-wide uppercase text-muted group-hover:text-fire2">Watch on Instagram ↗</div>
+      </div>
+    </Reveal>
+  );
+}
+
+function InstagramEmbed({ permalink, tag }) {
+  useEffect(() => {
+    function process() { if (window.instgrm && window.instgrm.Embeds) window.instgrm.Embeds.process(); }
+    if (window.instgrm) { process(); return; }
+    const existing = document.querySelector('script[src*="instagram.com/embed.js"]');
+    if (!existing) {
+      const s = document.createElement('script');
+      s.async = true; s.src = 'https://www.instagram.com/embed.js'; s.onload = process;
+      document.body.appendChild(s);
+    } else {
+      existing.addEventListener('load', process);
+    }
+  }, []);
+  return (
+    <Reveal as="div" variant="reveal-scale"
+      className="reel-embed relative bg-bg2 border border-line rounded-lg overflow-hidden shadow-[6px_6px_0_rgba(0,0,0,0.45)] px-2.5 pt-2.5 flex justify-center transition-transform hover:-translate-x-1 hover:-translate-y-1 min-h-[420px] w-full max-w-[340px] animate-embedGlow">
+      <span className="absolute top-5 left-5 z-[5] text-[10px] tracking-wide uppercase text-ink border border-fire2/50 px-2.5 py-1 rounded-sm bg-fire shadow-[3px_3px_0_rgba(0,0,0,0.5)]">{tag}</span>
+      <blockquote className="instagram-media !m-0" data-instgrm-permalink={permalink} data-instgrm-version="14" style={{ width: '100%', minWidth: 'auto' }}></blockquote>
+    </Reveal>
+  );
+}
+
+function WatchSection() {
+  return (
+    <section id="watch" className="py-20 border-t border-line">
+      <Reveal as="div" className="text-[11px] tracking-[4px] uppercase text-fire mb-3.5">Watch</Reveal>
+      <Reveal as="h2" className="font-anton uppercase text-[clamp(28px,5vw,46px)] tracking-wide mb-5">On The Floor</Reveal>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-[640px] items-start">
+        {REELS.map((r, i) => (<ReelCard reel={r} index={i} key={r.href} />))}
+      </div>
+      <div className="flex gap-5 justify-center flex-wrap mt-10">
+        <InstagramEmbed permalink="https://www.instagram.com/reel/DW0vLDwgS4T/" tag="Red Bull Final" />
+      </div>
+    </section>
+  );
+}
+
+function FocusSection() {
+  return (
+    <section className="py-20 border-t border-line">
+      <Reveal as="div" className="text-[11px] tracking-[4px] uppercase text-fire mb-3.5">Focus</Reveal>
+      <Reveal as="h2" className="font-anton uppercase text-[clamp(28px,5vw,46px)] tracking-wide mb-5">What I Bring</Reveal>
+      <div className="flex gap-2.5 flex-wrap mt-2">
+        {CHIPS.map((c, i) => (
+          <Reveal key={c} as="span" delay={i * 60} className="chip border border-line text-muted text-xs tracking-wide uppercase px-4.5 py-2.5 rounded-full hover:border-fire hover:text-fire2">{c}</Reveal>
+        ))}
+        <Reveal as="span" delay={CHIPS.length * 60} className="chip border border-line text-muted text-xs tracking-wide uppercase px-4.5 py-2.5 rounded-full hover:border-fire hover:text-fire2">
+          Crew: <LddlmPatch />
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+function QuotesSection() {
+  return (
+    <section className="py-20 border-t border-line">
+      <Reveal as="div" className="text-[11px] tracking-[4px] uppercase text-fire mb-3.5">Crowd Reaction</Reveal>
+      <Reveal as="h2" className="font-anton uppercase text-[clamp(28px,5vw,46px)] tracking-wide mb-5">Straight From The Floor</Reveal>
+      <div className="grid gap-px bg-line border border-line rounded-[10px] overflow-hidden mt-2.5" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(240px,1fr))' }}>
+        {QUOTES.map((q, i) => (
+          <Reveal key={i} as="div" delay={i * 90} className="bg-bg2 p-6 text-sm text-[#d6d6d6] leading-relaxed">
+            {q.text}
+            <div className="mt-3 text-[11px] tracking-wide uppercase text-muted">
+              {q.crewQuote ? <>— <a className="text-fire2 border-b border-fire2/35 hover:text-ink hover:border-ink" href="https://www.instagram.com/stalamuerte_stylezc/" target="_blank" rel="noopener">@stalamuerte_stylezc</a>, Los Diablos De La Muerte</> : <>— {q.whoText}</>}
+            </div>
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function ConnectSection() {
+  return (
+    <Reveal as="div" variant="reveal-scale" id="connect" className="text-center py-24 pb-20">
+      <h2 className="font-anton uppercase text-[clamp(34px,7vw,64px)] tracking-wide">Let's <span className="text-fire">Connect</span></h2>
+      <p className="text-muted mt-3.5 text-[15px]">For battles, bookings, or collabs — hit me up on Instagram.</p>
+      <Magnetic as="a" href="https://www.instagram.com/priyansh3604/" target="_blank" rel="noopener"
+        className="mt-7 inline-flex items-center gap-2 px-7 py-4 text-xs tracking-[1.5px] uppercase font-bold bg-fire text-ink border border-[#d8cfc2] shadow-[4px_4px_0_rgba(0,0,0,0.5)] hover:shadow-[6px_6px_0_rgba(0,0,0,0.5)] hover:-translate-y-0.5 hover:-translate-x-0.5">
+        @priyansh3604 ↗
+      </Magnetic>
+    </Reveal>
+  );
+}
+
+function Footer() {
+  return <footer className="text-center py-9 pb-16 text-[#4a4a4a] text-[11px] tracking-[2px] uppercase border-t border-line">Priyansh Shrivastava — Portfolio</footer>;
+}
+
+function App() {
+  const [activeId, setActiveId] = useState('about');
+  const hudSectionRef = useRef(null);
+  const kinetic1Ref = useRef(null);
+  const kinetic2Ref = useRef(null);
+  const { progressRef, hudBarRef, hudScrollRef, hudClockRef } = useScrollFX([kinetic1Ref, kinetic2Ref]);
+  useSectionObserver(['about', 'journey', 'watch', 'achievements', 'connect'], hudSectionRef, setActiveId);
+
+  return (
+    <>
+      <PageLoader />
+      <CornerMarks />
+      <div ref={progressRef} className="fixed top-0 left-0 h-[3px] z-[1000] w-0 shadow-[0_0_10px_rgba(214,69,69,0.6)] transition-[width] duration-100 ease-linear" style={{ background: 'linear-gradient(90deg,#8a1c1c,#d64545)' }}></div>
+      <div ref={hudBarRef} className="fixed left-0 right-0 bottom-0 z-[900] flex justify-between items-center px-6 py-2.5 bg-black/80 backdrop-blur-md border-t border-line text-[10.5px] tracking-[1.5px] uppercase text-muted translate-y-full transition-transform duration-500">
+        <div className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-fire2 animate-hudBlink"></span> SCRL <b ref={hudScrollRef} className="text-fire2 font-bold">00%</b></div>
+        <div className="hud-center hidden items-center gap-1.5">ON THE FLOOR: <b ref={hudSectionRef} className="text-fire2 font-bold">INTRO</b></div>
+        <div className="flex items-center gap-1.5">IST <b ref={hudClockRef} className="text-fire2 font-bold">00:00:00</b></div>
+      </div>
+
+      <Nav activeId={activeId} />
+      <Marquee />
+
+      <div className="max-w-[960px] mx-auto px-8">
+        <Hero />
+        <GalleryStrip />
+        <AboutSection />
+        <JourneyTimeline />
+        <KineticDivider ref={kinetic1Ref} text="SCOREBOARD" />
+        <AchievementsSection />
+        <WallOfFame />
+        <KineticDivider ref={kinetic2Ref} text="RECEIPTS" />
+        <WatchSection />
+        <FocusSection />
+        <QuotesSection />
+        <ConnectSection />
+        <Footer />
+      </div>
+
+      <CustomCursor />
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
 </script>
-<script async src="//www.instagram.com/embed.js"></script>
 </body>
 </html>
