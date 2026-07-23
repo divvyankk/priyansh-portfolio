@@ -147,8 +147,50 @@
 
 <div id="root"></div>
 
+<script>
+  // Safety net: if React/Babel/Tailwind fail to load (blocked CDN, offline, ad-blocker),
+  // don't leave visitors staring at a blank page — show a plain-HTML fallback with contact links.
+  setTimeout(function () {
+    var root = document.getElementById('root');
+    if (root && root.children.length === 0) {
+      document.body.innerHTML =
+        '<div style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:32px;font-family:Arial,sans-serif;background:#0a0806;color:#ece6dd;">' +
+        '<h1 style="font-size:26px;margin-bottom:12px;letter-spacing:1px;">PRIYANSH SHRIVASTAVA</h1>' +
+        '<p style="color:#8a8078;max-width:420px;margin-bottom:22px;line-height:1.6;">This page is having trouble loading. Please refresh, or reach out directly:</p>' +
+        '<p style="line-height:2;">' +
+        '<a href="https://www.instagram.com/priyansh3604/" style="color:#d64545;text-decoration:none;">Instagram</a> &nbsp;·&nbsp; ' +
+        '<a href="https://wa.me/917879897997" style="color:#d64545;text-decoration:none;">WhatsApp</a> &nbsp;·&nbsp; ' +
+        '<a href="mailto:priyanshshrivastava0927@gmail.com" style="color:#d64545;text-decoration:none;">Email</a>' +
+        '</p></div>';
+    }
+  }, 6000);
+</script>
+<noscript>
+  <div style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:32px;font-family:Arial,sans-serif;background:#0a0806;color:#ece6dd;">
+    <h1 style="font-size:26px;margin-bottom:12px;">PRIYANSH SHRIVASTAVA</h1>
+    <p style="color:#8a8078;max-width:420px;margin-bottom:22px;line-height:1.6;">This page needs JavaScript enabled to display. You can still reach out directly:</p>
+    <p style="line-height:2;">
+      <a href="https://www.instagram.com/priyansh3604/" style="color:#d64545;">Instagram</a> &middot;
+      <a href="https://wa.me/917879897997" style="color:#d64545;">WhatsApp</a> &middot;
+      <a href="mailto:priyanshshrivastava0927@gmail.com" style="color:#d64545;">Email</a>
+    </p>
+  </div>
+</noscript>
+
 <script type="text/babel">
 const { useState, useEffect, useRef } = React;
+
+class ErrorBoundary extends React.Component {
+  constructor(props) { super(props); this.state = { hasError: false }; }
+  static getDerivedStateFromError() { return { hasError: true }; }
+  componentDidCatch(error, info) {
+    console.error('[Portfolio section error]', this.props.label || '(unlabeled)', error, info && info.componentStack);
+  }
+  render() {
+    if (this.state.hasError) return this.props.fallback !== undefined ? this.props.fallback : null;
+    return this.props.children;
+  }
+}
 
 /* ---------------- DATA ---------------- */
 
@@ -417,8 +459,15 @@ function CustomCursor() {
 }
 
 function Nav({ activeId }) {
+  const [open, setOpen] = useState(false);
+  useEffect(() => {
+    if (!open) return;
+    function onKey(e) { if (e.key === 'Escape') setOpen(false); }
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [open]);
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 flex justify-between items-center px-8 py-5 backdrop-blur-md bg-black/55 border-b border-line">
+    <nav className="fixed top-0 left-0 right-0 z-50 flex justify-between items-center px-6 sm:px-8 py-5 backdrop-blur-md bg-black/55 border-b border-line">
       <div className="font-anton tracking-wide text-base">PRIYANSH<span className="text-fire">.</span></div>
       <div className="hidden sm:flex gap-6 items-center">
         {NAV_LINKS.map((l) => (
@@ -428,10 +477,31 @@ function Nav({ activeId }) {
           </a>
         ))}
       </div>
-      <Magnetic as="a" href="https://www.instagram.com/priyansh3604/" target="_blank" rel="noopener"
-        className="text-ink border border-line px-4 py-2 rounded-full hover:border-fire hover:text-fire2 text-[13px]">
-        Instagram ↗
-      </Magnetic>
+      <div className="flex items-center gap-3">
+        <Magnetic as="a" href="https://www.instagram.com/priyansh3604/" target="_blank" rel="noopener"
+          className="hidden sm:inline-flex text-ink border border-line px-4 py-2 rounded-full hover:border-fire hover:text-fire2 text-[13px]">
+          Instagram ↗
+        </Magnetic>
+        <button type="button" aria-label={open ? 'Close menu' : 'Open menu'} aria-expanded={open} onClick={() => setOpen((v) => !v)}
+          className="sm:hidden flex flex-col justify-center items-center gap-1.5 w-10 h-10 border border-line rounded-full shrink-0">
+          <span className={`block w-4 h-px bg-ink transition-transform ${open ? 'translate-y-[3px] rotate-45' : ''}`}></span>
+          <span className={`block w-4 h-px bg-ink transition-transform ${open ? '-translate-y-[3px] -rotate-45' : ''}`}></span>
+        </button>
+      </div>
+      {open && (
+        <div className="sm:hidden absolute top-full left-0 right-0 bg-black/95 backdrop-blur-md border-b border-line flex flex-col px-6 py-4 gap-1">
+          {NAV_LINKS.map((l) => (
+            <a key={l.id} href={'#' + l.id} onClick={() => setOpen(false)}
+              className={`py-3 text-sm tracking-[1.5px] uppercase border-b border-line last:border-none ${activeId === l.id ? 'text-fire2' : 'text-muted'}`}>
+              {l.label}
+            </a>
+          ))}
+          <a href="https://www.instagram.com/priyansh3604/" target="_blank" rel="noopener" onClick={() => setOpen(false)}
+            className="py-3 text-sm tracking-[1.5px] uppercase text-fire2">
+            Instagram ↗
+          </a>
+        </div>
+      )}
     </nav>
   );
 }
@@ -874,31 +944,45 @@ function App() {
         <div className="flex items-center gap-1.5">IST <b ref={hudClockRef} className="text-fire2 font-bold">00:00:00</b></div>
       </div>
 
-      <Nav activeId={activeId} />
-      <Marquee />
+      <ErrorBoundary label="Nav"><Nav activeId={activeId} /></ErrorBoundary>
+      <ErrorBoundary label="Marquee"><Marquee /></ErrorBoundary>
 
-      <div className="max-w-[960px] mx-auto px-8">
-        <Hero />
-        <GalleryStrip />
-        <AboutSection />
-        <JourneyTimeline />
-        <KineticDivider ref={kinetic1Ref} text="SCOREBOARD" />
-        <AchievementsSection />
-        <WallOfFame />
-        <KineticDivider ref={kinetic2Ref} text="RECEIPTS" />
-        <WatchSection />
-        <FocusSection />
-        <QuotesSection />
-        <ConnectSection />
+      <div className="max-w-[960px] mx-auto px-5 sm:px-8">
+        <ErrorBoundary label="Hero"><Hero /></ErrorBoundary>
+        <ErrorBoundary label="Gallery"><GalleryStrip /></ErrorBoundary>
+        <ErrorBoundary label="About"><AboutSection /></ErrorBoundary>
+        <ErrorBoundary label="Journey"><JourneyTimeline /></ErrorBoundary>
+        <ErrorBoundary label="Kinetic1"><KineticDivider ref={kinetic1Ref} text="SCOREBOARD" /></ErrorBoundary>
+        <ErrorBoundary label="Achievements"><AchievementsSection /></ErrorBoundary>
+        <ErrorBoundary label="WallOfFame"><WallOfFame /></ErrorBoundary>
+        <ErrorBoundary label="Kinetic2"><KineticDivider ref={kinetic2Ref} text="RECEIPTS" /></ErrorBoundary>
+        <ErrorBoundary label="Watch"><WatchSection /></ErrorBoundary>
+        <ErrorBoundary label="Focus"><FocusSection /></ErrorBoundary>
+        <ErrorBoundary label="Quotes"><QuotesSection /></ErrorBoundary>
+        <ErrorBoundary label="Connect"><ConnectSection /></ErrorBoundary>
         <Footer />
       </div>
 
-      <CustomCursor />
+      <ErrorBoundary label="Cursor"><CustomCursor /></ErrorBoundary>
     </>
   );
 }
 
-ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <ErrorBoundary label="App" fallback={
+    <div style={{minHeight:'100vh',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',textAlign:'center',padding:'32px',background:'#0a0806',color:'#ece6dd'}}>
+      <h1 style={{fontSize:'26px',marginBottom:'12px'}}>PRIYANSH SHRIVASTAVA</h1>
+      <p style={{color:'#8a8078',maxWidth:'420px',marginBottom:'22px',lineHeight:1.6}}>Something went wrong loading this page. Please refresh, or reach out directly:</p>
+      <p style={{lineHeight:2}}>
+        <a href="https://www.instagram.com/priyansh3604/" style={{color:'#d64545'}}>Instagram</a> &middot;{' '}
+        <a href="https://wa.me/917879897997" style={{color:'#d64545'}}>WhatsApp</a> &middot;{' '}
+        <a href="mailto:priyanshshrivastava0927@gmail.com" style={{color:'#d64545'}}>Email</a>
+      </p>
+    </div>
+  }>
+    <App />
+  </ErrorBoundary>
+);
 </script>
 </body>
 </html>
